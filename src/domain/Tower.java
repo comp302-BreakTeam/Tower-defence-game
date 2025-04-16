@@ -1,3 +1,7 @@
+package domain;
+
+
+
 public abstract class Tower {
     protected int level;
     protected int damage;

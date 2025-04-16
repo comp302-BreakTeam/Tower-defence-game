@@ -1,3 +1,7 @@
+package domain;
+
+
+
 public class Player {
     private int gold;
     private int lives;

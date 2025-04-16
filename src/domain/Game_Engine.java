@@ -1,3 +1,6 @@
+package domain;
+
+
 public class Game_Engine {
     int currentWave;
     boolean isPaused;
