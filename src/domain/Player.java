@@ -44,4 +44,9 @@ public class Player {
 		return lives;
 	}
 
+
+	public String getName() {
+		return name;
+	}
+
 }
