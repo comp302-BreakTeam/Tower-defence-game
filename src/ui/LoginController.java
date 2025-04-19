@@ -27,7 +27,10 @@ public class LoginController {
     	if (!playerName.isEmpty()) {
     		Player player = new Player(playerName, 10, 500);
     		System.out.println("Player created: " + player.getName());
-    		Parent root = FXMLLoader.load(getClass().getResource("MainMenu.fxml"));
+    		FXMLLoader loader = new FXMLLoader(getClass().getResource("MainMenu.fxml"));
+    		Parent root = loader.load();
+    		MainMenuController controller= loader.getController();
+    		controller.setPlayer(player);
     		Stage stage = (Stage)button.getScene().getWindow();
     		stage.setScene(new Scene(root, 1200, 800)); 
             stage.show();

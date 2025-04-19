@@ -1,21 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.MainMenuController">
    <center>
-      <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fitHeight="400.0" fitWidth="603.0">
+            <ImageView fitHeight="800.0" fitWidth="1200.0">
                <image>
                   <Image url="@Assets/KuTowerDefence2.jpg" />
                </image>
             </ImageView>
+            <ImageView fitHeight="97.0" fitWidth="268.0">
+               <image>
+                  <Image url="@Assets/Ribbon_Yellow_3Slides.png" />
+               </image>
+            </ImageView>
+            <Button fx:id="quit" layoutX="519.0" layoutY="656.0" mnemonicParsing="false" onAction="#handleQuit" opacity="0.0" prefHeight="76.0" prefWidth="173.0" text="Button" />
+            <Label fx:id="playerName" alignment="CENTER" layoutX="58.0" layoutY="5.0" prefHeight="62.0" prefWidth="154.0" text="Label">
+               <font>
+                  <Font name="Clarendon BT Bold" size="26.0" />
+               </font>
+            </Label>
          </children>
-      </AnchorPane>
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+      </Pane>
    </center>
 </BorderPane>
