@@ -2,8 +2,13 @@ package ui;
 
 
 
+import java.io.IOException;
+
 import domain.Player;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -34,9 +39,14 @@ public class MainMenuController {
 	}
 	@FXML
 	private void handleMapEditor() throws IOException {
-		Parent root = FXMLLoader.load(getClass().getResource("MapEditor.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("MapEditor.fxml"));
+        Parent root = loader.load();
+        MapController controller = loader.getController();
+        Scene currentScene = mapButton.getScene();
+        controller.setPreviousScene(currentScene);
 		Stage stage = (Stage)mapButton.getScene().getWindow();
 		stage.setScene(new Scene(root, 1200, 800)); 
+		stage.setTitle("Map Editor");
         stage.show();
 	}
 	public void setPlayer(Player player) {

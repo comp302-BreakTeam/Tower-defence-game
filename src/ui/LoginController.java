@@ -33,6 +33,7 @@ public class LoginController {
     		controller.setPlayer(player);
     		Stage stage = (Stage)button.getScene().getWindow();
     		stage.setScene(new Scene(root, 1200, 800)); 
+    		stage.setTitle("Main Menu");
             stage.show();
 		}
     	else {
