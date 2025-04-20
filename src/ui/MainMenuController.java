@@ -16,6 +16,8 @@ public class MainMenuController {
 	@FXML
     private Button quit;
 	@FXML
+    private Button mapButton;
+	@FXML
 	private Label playerName;
 	@FXML
 	private void handleQuit() {
@@ -29,6 +31,13 @@ public class MainMenuController {
 		}
 		
 		
+	}
+	@FXML
+	private void handleMapEditor() throws IOException {
+		Parent root = FXMLLoader.load(getClass().getResource("MapEditor.fxml"));
+		Stage stage = (Stage)mapButton.getScene().getWindow();
+		stage.setScene(new Scene(root, 1200, 800)); 
+        stage.show();
 	}
 	public void setPlayer(Player player) {
 		this.player= player;
