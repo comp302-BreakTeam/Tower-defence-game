@@ -3,5 +3,7 @@ package ui;
 public enum TileType {
 	PATH,
     GRASS,
-    EMPTY_PLOT
+    EMPTY_PLOT,
+    ROCK,
+    TREE
 }

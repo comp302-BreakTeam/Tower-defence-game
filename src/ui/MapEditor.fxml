@@ -62,7 +62,7 @@
                         <Font name="Clarendon BT Bold" size="20.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="tileSelector" prefWidth="150.0" visibleRowCount="3" />
+                  <ComboBox fx:id="tileSelector" prefWidth="150.0" visibleRowCount="5" />
                </items>
             </ToolBar>
             <Button fx:id="saveButton" alignment="CENTER_RIGHT" layoutX="1064.0" mnemonicParsing="false" onAction="#handleSave" prefHeight="30.0" prefWidth="83.0" style="-fx-background-color: red;" text="Save">
