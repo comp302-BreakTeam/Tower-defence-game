@@ -23,6 +23,8 @@ public class MainMenuController {
 	@FXML
     private Button mapButton;
 	@FXML
+    private Button newGameButton;
+	@FXML
 	private Label playerName;
 	@FXML
 	private void handleQuit() {
@@ -53,6 +55,19 @@ public class MainMenuController {
 		this.player= player;
 		playerName.setText(player.getName());
 		
+	}
+	@FXML
+	private void handleNewGame() throws IOException {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("MapSelector.fxml"));
+        Parent root = loader.load();
+        MapSelectorController controller = loader.getController();
+        Scene currentScene = newGameButton.getScene();
+        controller.setPreviousScene(currentScene);
+        controller.setPlayer(player);
+		Stage stage = (Stage)newGameButton.getScene().getWindow();
+		stage.setScene(new Scene(root, 1200, 800)); 
+		stage.setTitle("Map Selector");
+        stage.show();
 	}
 
 }

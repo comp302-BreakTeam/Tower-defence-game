@@ -30,7 +30,7 @@
                </font>
             </Label>
             <Button fx:id="mapButton" layoutX="401.0" layoutY="514.0" mnemonicParsing="false" onAction="#handleMapEditor" opacity="0.0" prefHeight="66.0" prefWidth="396.0" text="Button" />
-            <Button fx:id="newGameButton" layoutX="396.0" layoutY="369.0" mnemonicParsing="false" opacity="0.0" prefHeight="72.0" prefWidth="413.0" text="Button" />
+            <Button fx:id="newGameButton" layoutX="396.0" layoutY="369.0" mnemonicParsing="false" onAction="#handleNewGame" opacity="0.0" prefHeight="72.0" prefWidth="413.0" text="Button" />
          </children>
          <cursor>
             <Cursor fx:constant="DEFAULT" />
