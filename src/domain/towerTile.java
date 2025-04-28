@@ -1,11 +1,12 @@
 package domain;
 
 public class towerTile extends Tile{
+	private static final long serialVersionUID = 1L;
 	private Tower tower = null;
 	final private Enemy enemy = null;
 	
 	public towerTile(Tower tower) {
-		super();
+		super(TileType.EMPTY_PLOT);
 		this.tower = tower;
 	}
 	public boolean isEmpty(towerTile twrTile) {

@@ -1,4 +1,4 @@
-package ui;
+package domain;
 
 public enum TileType {
 	PATH,
