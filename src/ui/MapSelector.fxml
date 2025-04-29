@@ -29,7 +29,7 @@
    <bottom>
       <Pane prefHeight="50.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="play" layoutX="533.0" layoutY="1.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="106.0" />
+            <Button fx:id="play" layoutX="533.0" layoutY="1.0" mnemonicParsing="false" onAction="#loadSelectedMap" prefHeight="48.0" prefWidth="106.0" />
          </children>
       </Pane>
    </bottom>

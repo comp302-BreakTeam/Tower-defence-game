@@ -9,6 +9,8 @@ import domain.Map;
 import domain.Player;
 import domain.SaveMap;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -85,6 +87,19 @@ public class MapSelectorController {
     		alert.showAndWait();
 		}
 		Map loadedMap = SaveMap.loadMap(selectedMap + ".dat");
+		
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("Game.fxml"));
+        Parent root = loader.load();
+        GameController controller = loader.getController();
+        Scene currentScene = play.getScene();
+        controller.setPreviousScene(currentScene);
+        controller.setPlayer(player);
+        controller.setMap(loadedMap);
+        controller.generateMap();
+        Stage stage = (Stage)play.getScene().getWindow();
+		stage.setScene(new Scene(root, 1200, 800)); 
+		stage.setTitle("Game");
+        stage.show();
 	}
 
 }
