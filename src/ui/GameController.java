@@ -94,9 +94,7 @@ public class GameController {
             case EMPTY_PLOT:
                 imagePath = "assets/empty_plot.png";
                 break;
-            default:
-                imagePath = "assets/grass.png";
-                break;
+            
         }
 
         tile.setStyle(
