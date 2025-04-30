@@ -7,7 +7,22 @@ public class Map implements Serializable {
  
  private Tile[][] mapGrid;
  private Tile startTile;
- private Tile endTile;
+ public Tile getStartTile() {
+	return startTile;
+}
+
+public void setStartTile(Tile startTile) {
+	this.startTile = startTile;
+}
+
+public Tile getEndTile() {
+	return endTile;
+}
+
+public void setEndTile(Tile endTile) {
+	this.endTile = endTile;
+}
+private Tile endTile;
  
  public Map() {
 	 this.mapGrid = new Tile[16][16];
