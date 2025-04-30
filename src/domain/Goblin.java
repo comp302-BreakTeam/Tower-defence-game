@@ -12,7 +12,7 @@ public class Goblin extends Enemy{
 	@Override
 	protected void removeEnemy(Enemy enemy) {
 		// TODO Auto-generated method stub
-		
+		 
 	}public void damaged() {
 		if (this.health>0){
 			health = health - 1;

@@ -11,7 +11,7 @@ public abstract class Enemy {
 		this.speed = speed;
 		this.position = position;
 	}
-	
+	 
 	public void damaged() {
 		if (this.health>0){
 			health = health - 1;

@@ -73,9 +73,9 @@ public class Knight extends Enemy{
 	public void setPosition(pathTile position) {
 		this.position = position;
 	}
+ 
 
 
-
-}
+} 
 
 
