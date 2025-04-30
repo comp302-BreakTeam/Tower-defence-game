@@ -63,6 +63,14 @@ public class MapController {
 					switch (type) {
 					case PATH: 
 						map.setTile(row, col, new pathTile());
+						if(isEdge(row, col)) {
+							if(map.getStartTile()==null) {
+								map.setStartTile(map.getTile(row, col));
+							}
+							else {
+								map.setEndTile(map.getTile(row, col));
+							}
+						}
 						break;
 					case EMPTY_PLOT:
 						map.setTile(row, col, new fixEmptyTile(TileType.EMPTY_PLOT));
@@ -79,6 +87,7 @@ public class MapController {
 						
 					
 					}
+					
 				}
 			}
 			try {

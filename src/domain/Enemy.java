@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public abstract class Enemy {
 	protected int health;
 	protected float speed;
+	protected int coin;
 	protected pathTile position;
 	public Enemy(int health, float speed, pathTile position) {
 		this.health = health;
@@ -17,6 +18,7 @@ public abstract class Enemy {
 			health = health - 1;
 		}if(health<=0) {
 			removeEnemy(this);
+			
 		}
 	}
 	protected abstract void removeEnemy(Enemy enemy);
