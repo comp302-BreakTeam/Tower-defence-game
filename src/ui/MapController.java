@@ -7,6 +7,7 @@ import domain.SaveMap;
 import domain.TileType;
 import domain.fixEmptyTile;
 import domain.pathTile;
+import domain.towerTile;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -67,7 +68,7 @@ public class MapController {
 						map.setTile(row, col, new fixEmptyTile(TileType.EMPTY_PLOT));
 						break;
 					case GRASS:
-						map.setTile(row, col, new fixEmptyTile(TileType.GRASS));
+						map.setTile(row, col, new towerTile(TileType.GRASS));
 						break;
 					case ROCK:
 						map.setTile(row, col, new fixEmptyTile(TileType.GRASS));
@@ -88,6 +89,7 @@ public class MapController {
 			stage.setScene(previousScene); 
 			stage.setTitle("Main Menu");
 	        stage.show();
+	        
         }
         
 	}

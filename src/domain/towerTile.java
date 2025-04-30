@@ -5,9 +5,8 @@ public class towerTile extends Tile{
 	private Tower tower = null;
 	final private Enemy enemy = null;
 	
-	public towerTile(Tower tower) {
+	public towerTile(TileType grass) {
 		super(TileType.EMPTY_PLOT);
-		this.tower = tower;
 	}
 	public boolean isEmpty(towerTile twrTile) {
 		if(twrTile.tower==null) {
