@@ -11,7 +11,7 @@ public class SaveMap {
 	public static void saveMap(Map map, String filename) throws IOException {
 		File dir = new File("maps");
         if (!dir.exists()) {
-            dir.mkdir(); // Create "maps" folder if not exists
+            dir.mkdir();
         }
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File(dir, filename)))) {
             oos.writeObject(map);

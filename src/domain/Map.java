@@ -6,6 +6,8 @@ public class Map implements Serializable {
  private static final long serialVersionUID = 1L;
  
  private Tile[][] mapGrid;
+ private Tile startTile;
+ private Tile endTile;
  
  public Map() {
 	 this.mapGrid = new Tile[16][16];
@@ -14,6 +16,8 @@ public class Map implements Serializable {
 			 this.mapGrid[x][y]= new fixEmptyTile(TileType.GRASS);
 		 }
 	 }
+	 this.startTile = null;
+	 this.endTile=null;
  }
 
  public Tile[][] getMapGrid() {
