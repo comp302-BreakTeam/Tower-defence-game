@@ -71,11 +71,12 @@ public class MapController {
 						map.setTile(row, col, new towerTile(TileType.GRASS));
 						break;
 					case ROCK:
-						map.setTile(row, col, new fixEmptyTile(TileType.GRASS));
+						map.setTile(row, col, new fixEmptyTile(TileType.ROCK));
 						break;
 					case TREE:
 						map.setTile(row, col, new fixEmptyTile(TileType.TREE));
 						break;
+						
 					
 					}
 				}
@@ -119,7 +120,7 @@ public class MapController {
     	}
     }
     public void setTileBackground(Button tile, TileType type) {
-        String imagePath = "assets/grass.png"; // Default value
+        String imagePath = "assets/grass.png"; 
 
         switch (type) {
             case PATH:

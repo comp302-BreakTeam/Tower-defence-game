@@ -1,8 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml/1">
-	<!-- TODO Add Nodes -->
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.GameController">
+   <center>
+      <GridPane fx:id="mapGrid" gridLinesVisible="true" prefHeight="306.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+      </GridPane>
+   </center>
+   <top>
+      <Pane prefHeight="60.0" prefWidth="600.0" style="-fx-background-color: #964B00;" BorderPane.alignment="CENTER">
+         <children>
+            <Label fx:id="playerName" layoutX="13.0" layoutY="7.0" prefHeight="48.0" prefWidth="97.0" text="Label">
+               <font>
+                  <Font name="Clarendon BT Bold" size="20.0" />
+               </font>
+            </Label>
+            <ImageView fx:id="health" fitHeight="42.0" fitWidth="56.0" layoutX="143.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="coin" fitHeight="42.0" fitWidth="56.0" layoutX="323.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="wave" fitHeight="42.0" fitWidth="56.0" layoutX="469.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
+            <Label fx:id="numHealth" layoutX="212.0" layoutY="10.0" prefHeight="44.0" prefWidth="56.0" text="Label">
+               <font>
+                  <Font name="Clarendon BT Bold" size="20.0" />
+               </font></Label>
+            <Label fx:id="numCoin" layoutX="388.0" layoutY="10.0" prefHeight="44.0" prefWidth="53.0" text="Label">
+               <font>
+                  <Font name="Clarendon BT Bold" size="20.0" />
+               </font></Label>
+            <Label fx:id="numWave" layoutX="542.0" layoutY="10.0" prefHeight="44.0" prefWidth="51.0" text="Label">
+               <font>
+                  <Font name="Clarendon BT Bold" size="20.0" />
+               </font></Label>
+            <Button fx:id="back" layoutX="1092.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleBack" style="-fx-background-color: red;" text="BACK">
+               <font>
+                  <Font name="Clarendon BT Bold" size="20.0" />
+               </font>
+            </Button>
+         </children></Pane>
+   </top>
 </BorderPane>
-
