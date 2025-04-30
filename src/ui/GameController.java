@@ -111,6 +111,11 @@ public class GameController {
 				Button tile = new Button();
     			tile.setPrefSize(TILE_WIDTH, TILE_HEIGHT);
     			setTileBackground(tile, currentMap[row][col] );
+				if(map.getTile(row, col).getType()==TileType.EMPTY_PLOT){
+					tile.setOnAction(e->{
+						
+					});
+				}
     			mapGrid.add(tile, col, row);
 			}
 			
