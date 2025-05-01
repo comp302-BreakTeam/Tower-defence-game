@@ -3,16 +3,11 @@ package domain;
 import java.util.ArrayList;
 
 public abstract class Enemy {
-	protected int health;
+	protected int health = 100;
 	protected float speed;
 	protected int coin;
 	protected pathTile position;
-	public Enemy(int health, float speed, pathTile position) {
-		this.health = health;
-		this.speed = speed;
-		this.position = position;
-	}
-	 
+	
 	public void damaged() {
 		if (this.health>0){
 			health = health - 1;

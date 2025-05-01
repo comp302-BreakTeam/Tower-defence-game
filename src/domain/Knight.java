@@ -3,9 +3,13 @@ package domain;
 import java.util.ArrayList;
 
 public class Knight extends Enemy{
-
-	public Knight(int health, float speed, pathTile position) {
-		super(health, speed, position);
+	protected int health = 100;
+	protected float speed = (float) 1.0;
+	protected int coin;
+	protected pathTile position;
+	
+	public Knight() {
+		super();
 		// TODO Auto-generated constructor stub
 	}
 

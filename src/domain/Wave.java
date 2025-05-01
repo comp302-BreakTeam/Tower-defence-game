@@ -8,12 +8,19 @@ import java.util.Queue;
 public class Wave {
 	private ArrayList<Enemy> enemies = new ArrayList();
 	private long spawnInterval;
-	private int waveNumber;
-	public Wave(ArrayList<Enemy> enemies, long spawnInterval, int waveNumber) {
+	private int waveSize;
+	private float enemySpeed;
+	public Wave(long spawnInterval, int waveSize) {
 		super();
-		this.enemies = enemies;
+		int i=0;
+		for(i=0; i<waveSize/2; i++) {
+			enemies.set(i, new Goblin());
+		}for(int k=i; k<waveSize; k++) {
+			enemies.set(i, new Knight());
+		}
+		i=0;
 		this.spawnInterval = spawnInterval;
-		this.waveNumber = waveNumber;
+		this.waveSize = waveSize;
 	}
 	public void startWave() {
 		for(Enemy e:enemies) {

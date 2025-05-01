@@ -3,9 +3,13 @@ package domain;
 import java.util.ArrayList;
 
 public class Goblin extends Enemy{
-
-	public Goblin(int health, float speed, pathTile position) {
-		super(health, speed, position);
+	protected int health = 100;
+	protected float speed = (float) 1.2;
+	protected int coin;
+	protected pathTile position;
+	
+	public Goblin() {
+		super();
 		// TODO Auto-generated constructor stub
 	}
 
