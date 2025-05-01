@@ -56,6 +56,8 @@
 		private Button back;
 	    @FXML
 	    private Button pause;
+	    @FXML
+	    private Button toggle;
 	    private GameEngine engine;
 	    private List<int[]> path;
 	    private AnimationTimer timer;
