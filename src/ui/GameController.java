@@ -1,9 +1,14 @@
 package ui;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import domain.Maps;
 import domain.Player;
+import domain.Tile;
 import domain.TileType;
+import domain.pathTile;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -127,6 +132,28 @@ public class GameController {
 		stage.setScene(previousScene); 
 		stage.setTitle("Main Menu");
         stage.show();
+	}
+	
+	public List<int[]> getPath(Maps map){
+		List<int[]> pathList = new ArrayList<int[]>();
+		Tile currentTile = map.getStartTile();
+		pathList.add(map.getCoordinatesof(currentTile));
+		boolean isEnd=false;
+		while(isEnd==false) {
+			for (Tile tile:currentTile.getAdjacentTiles()) {
+				isEnd = true;
+					TileType type = tile.getType();
+					switch (type) {
+					case PATH: 
+						currentTile = tile;
+						pathList.add(map.getCoordinatesof(currentTile));
+						isEnd = false;
+						continue;
+					}
+				}
+			
+		}
+		return null;
 	}
 	
 

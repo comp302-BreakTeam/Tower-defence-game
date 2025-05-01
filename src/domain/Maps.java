@@ -47,6 +47,17 @@ private Tile endTile;
 	 mapGrid[row][col]=tile;
  }
  
- 
+ public int[] getCoordinatesof(Tile tile) {
+	 int[] coordinates = new int[2];
+	 for(int row=0; row<mapGrid.length; row++) {
+		 for(int col=0; col<mapGrid[row].length; col++) {
+			 if(mapGrid[row][col].equals(tile)) {
+				 coordinates[0] = row;
+				 coordinates[1] = col;
+			 }
+		 }
+	 }
+	return coordinates;
+ }
 
 }
