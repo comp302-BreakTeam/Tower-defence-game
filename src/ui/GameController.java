@@ -118,13 +118,13 @@
 	                imagePath = "assets/empty_plot.png";
 	                break;
 	            case ARCHER_TOWER:
-	            	imagePath = "assets/Tower_archer128.png";
+	            	imagePath = "assets/Archer_Tower.png";
 	            	break;
 	            case MAGE_TOWER:
-	            	imagePath = "assets/Tower_spell128.png";
+	            	imagePath = "assets/Mage_Tower.png";
 	            	break;
 	            case ARTILLERY_TOWER:
-	            	imagePath = "assets/Tower_bomb128.png";
+	            	imagePath = "assets/Artillery_Tower.png";
 	            	break;
 	            	
 	            default:
