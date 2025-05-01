@@ -47,15 +47,18 @@ public abstract class Tower {
 		this.cost = cost;
 	}
 
-	public static void fireProjectile(){
+	public void fireProjectile(){
     	
     }
 
-    public static void upgradeTower(){
-
+    public void upgradeTower(){
+    	setCost(2*this.cost);
+    	setFireRate(1.2f*this.fireRate);
+    	setDamage(2*this.damage);
+    	setLevel(this.level+1);
     }
 
-    public static int sellTower(){
-        return 0;
+    public int sellTower(){
+        return getCost();
     }
 }
