@@ -184,9 +184,19 @@
 					
 				}
 				else {
-					TranslateTransition tt = new TranslateTransition(Duration.millis(500), view);
-	                tt.setToX(e.getCol() * TILE_WIDTH);
-	                tt.setToY(e.getRow() * TILE_HEIGHT);
+					TranslateTransition tt = new TranslateTransition(Duration.millis(300), view);
+					double targetx = e.getCol() * TILE_WIDTH ;
+	                double targety = e.getRow() * TILE_HEIGHT ;
+	                double movx = targetx - view.getTranslateX();
+	                double movy = targety - view.getTranslateY();
+	                if (movy>0) {
+						movy-=30;
+					}
+	                else if(movy<0) {
+						movy-=10;
+					}
+	                tt.setByX(movx);
+	                tt.setByY(movy);
 	                tt.play();
 				}
 			}
