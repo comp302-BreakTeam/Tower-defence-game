@@ -15,5 +15,19 @@ public class OptionController {
 	public void setPreviousScene(Scene scene) {
         this.previousScene = scene;
     }
+@FXML private Slider volumeSlider;
+@FXML private ComboBox<String> graphicsComboBox;
+@FXML private Button backButton;
+
+@FXML
+public void initialize() {
+    graphicsComboBox.setValue("Medium"); // default
+    backButton.setOnAction(e -> {
+        if (previousScene != null) {
+            Stage stage = (Stage) backButton.getScene().getWindow();
+            stage.setScene(previousScene);
+        }
+    });
+}
 
 }
