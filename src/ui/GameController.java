@@ -14,13 +14,13 @@
 	import javafx.animation.AnimationTimer;
 	import javafx.animation.TranslateTransition;
 	import javafx.fxml.FXML;
-import javafx.geometry.Side;
-import javafx.scene.Scene;
+	import javafx.geometry.Side;
+	import javafx.scene.Scene;
 	import javafx.scene.control.Button;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ProgressBar;
+	import javafx.scene.control.ContextMenu;
+	import javafx.scene.control.Label;
+	import javafx.scene.control.MenuItem;
+	import javafx.scene.control.ProgressBar;
 	import javafx.scene.image.Image;
 	import javafx.scene.image.ImageView;
 	import javafx.scene.layout.GridPane;
@@ -54,10 +54,17 @@ import javafx.scene.control.ProgressBar;
 	    private ImageView wave;
 	    @FXML
 		private Button back;
+	    @FXML
+	    private Button pause;
+	    @FXML
+	    private Button toggle;
 	    private GameEngine engine;
 	    private List<int[]> path;
 	    private AnimationTimer timer;
 	    private Map<Enemy, ImageView> enemyViews = new HashMap<>();
+	    private boolean isPaused=false;
+	    private boolean gameSpeed=false;
+	    private Map<Enemy, ProgressBar> enemyHP = new HashMap<>();
 	    
 	    
 	    public void setPreviousScene(Scene scene) {
@@ -113,13 +120,13 @@ import javafx.scene.control.ProgressBar;
 	                imagePath = "assets/empty_plot.png";
 	                break;
 	            case ARCHER_TOWER:
-	            	imagePath = "assets/Tower_archer128.png";
+	            	imagePath = "assets/Archer_Tower.png";
 	            	break;
 	            case MAGE_TOWER:
-	            	imagePath = "assets/Tower_spell128.png";
+	            	imagePath = "assets/Mage_Tower.png";
 	            	break;
 	            case ARTILLERY_TOWER:
-	            	imagePath = "assets/Tower_bomb128.png";
+	            	imagePath = "assets/Artillery_Tower.png";
 	            	break;
 	            	
 	            default:
@@ -155,7 +162,7 @@ import javafx.scene.control.ProgressBar;
 		    			archer.setOnAction(ev -> {
 		    		       setTileBackground(tile,TileType.ARCHER_TOWER);
 		    		       map.setTile(r, c, new towerTile(TileType.ARCHER_TOWER));
-		    		       currentMap[r][c]=TileType.ARCHER_TOWER;
+   		    		       currentMap[r][c]=TileType.ARCHER_TOWER;
 		    		       tile.setOnAction(null);
 		    		    });
 		    			mage.setOnAction(ev -> {
@@ -193,10 +200,19 @@ import javafx.scene.control.ProgressBar;
 		            public void handle(long now) {
 		                if (now - lastUpdate < 500_000_00) return;
 		                lastUpdate = now;
-	
-		                engine.update();
-		                renderEnemies();
+		                
+		                if(!isPaused) {	
+		                engine.update();	
+		                renderEnemies();			            		                
 		                updateHUD();
+		                
+		                if(gameSpeed) {
+		                	engine.update();	
+			                renderEnemies();			            		                
+			                updateHUD();
+		                }
+		                }
+		               
 	
 		                if (engine.isGameOver()) {
 		                    timer.stop();
@@ -210,7 +226,7 @@ import javafx.scene.control.ProgressBar;
 		private void renderEnemies() {
 			for (Enemy e : engine.getActiveEnemies()) {
 				ImageView view = enemyViews.get(e);
-				
+				ProgressBar HP = enemyHP.get(e);
 				if (view == null) {
 					Image img;
 					if(e.getClass()==Knight.class) {
@@ -224,13 +240,23 @@ import javafx.scene.control.ProgressBar;
 					view.setFitWidth(TILE_WIDTH * 0.7);
 					view.setFitHeight(TILE_HEIGHT * 0.7);
 					enemyViews.put(e, view);
+					HP = new ProgressBar(1);
+					HP.setPrefHeight(10);
+					HP.setPrefWidth(TILE_WIDTH * 0.7);
+					HP.setStyle("-fx-accent: red;");
+					enemyHP.put(e, HP);
+					mapGrid.getChildren().add(HP);
 					mapGrid.getChildren().add(view);
 	                view.setTranslateX(e.getCol() * TILE_WIDTH);
 	                view.setTranslateY(e.getRow() * TILE_HEIGHT);
+	                HP.setTranslateX(view.getTranslateX());
+	                HP.setTranslateY(view.getTranslateY()-30);
+	                
 					
 				}
 				else {
 					TranslateTransition tt = new TranslateTransition(Duration.millis(300), view);
+					TranslateTransition hh = new TranslateTransition(Duration.millis(300), HP);
 					double targetx = e.getCol() * TILE_WIDTH ;
 	                double targety = e.getRow() * TILE_HEIGHT ;
 	                double movx = targetx - view.getTranslateX();
@@ -242,14 +268,19 @@ import javafx.scene.control.ProgressBar;
 						movy-=10;
 					}
 	                tt.setByX(movx);
+	                hh.setByX(movx);
 	                tt.setByY(movy);
+	                hh.setByY(movy);
 	                tt.play();
+	                hh.play();
+	                HP.setProgress(e.getHealth()/e.maxHP);
 				}
 			}
 			
 			for (Enemy e : enemyViews.keySet()) {
 				if (!engine.getActiveEnemies().contains(e)) {
 					mapGrid.getChildren().remove(enemyViews.get(e));
+					mapGrid.getChildren().remove(enemyHP.get(e));
 					
 				}
 			}
@@ -312,4 +343,20 @@ import javafx.scene.control.ProgressBar;
 		    }
 		    return false;
 		}
-	}
+		@FXML
+		private void handlePause(){
+			isPaused=!isPaused;	
+			}
+	
+		@FXML
+		private void toggleSpeed() {
+			
+			gameSpeed=!gameSpeed;
+			if(gameSpeed) {
+				toggle.setText("FAST");
+			}
+			else {
+				toggle.setText("NORMAL");
+			}
+		}
+		}

@@ -33,6 +33,7 @@ public class MapController {
     private GridPane mapGrid;
     @FXML
     private Button saveButton;
+    
     @FXML
 	private void handleSave() throws IOException {
     	if (!validateMap()) {
