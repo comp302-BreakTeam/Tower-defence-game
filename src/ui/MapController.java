@@ -76,7 +76,7 @@ public class MapController {
 						map.setTile(row, col, new fixEmptyTile(TileType.EMPTY_PLOT));
 						break;
 					case GRASS:
-						map.setTile(row, col, new towerTile(TileType.GRASS));
+						map.setTile(row, col, new fixEmptyTile(TileType.GRASS)); 
 						break;
 					case ROCK:
 						map.setTile(row, col, new fixEmptyTile(TileType.ROCK));

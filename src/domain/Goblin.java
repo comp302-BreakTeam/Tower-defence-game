@@ -9,3 +9,8 @@ public class Goblin extends Enemy{
 		super(100, 1.2f,10);
 	}
 	}
+
+	
+
+
+
