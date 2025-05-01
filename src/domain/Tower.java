@@ -60,6 +60,6 @@ public abstract class Tower {
     }
 
     public int sellTower(){
-        return getCost();
+        return getCost()/2;
     }
 }
