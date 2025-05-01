@@ -54,6 +54,8 @@ import javafx.scene.control.ProgressBar;
 	    private ImageView wave;
 	    @FXML
 		private Button back;
+	    @FXML
+	    private Button pause;
 	    private GameEngine engine;
 	    private List<int[]> path;
 	    private AnimationTimer timer;

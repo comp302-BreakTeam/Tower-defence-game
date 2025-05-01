@@ -79,6 +79,11 @@
                   <Font name="Clarendon BT Bold" size="20.0" />
                </font>
             </Button>
+            <Button fx:id="pause" layoutX="986.0" layoutY="10.0" mnemonicParsing="false" onAction="#handlePause" style="-fx-background-color: red;" text="PAUSE">
+               <font>
+                  <Font name="Clarendon BT Bold" size="20.0" />
+               </font>
+            </Button>
          </children></Pane>
    </top>
 </BorderPane>
