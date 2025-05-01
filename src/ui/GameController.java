@@ -14,13 +14,13 @@
 	import javafx.animation.AnimationTimer;
 	import javafx.animation.TranslateTransition;
 	import javafx.fxml.FXML;
-import javafx.geometry.Side;
-import javafx.scene.Scene;
+	import javafx.geometry.Side;
+	import javafx.scene.Scene;
 	import javafx.scene.control.Button;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ProgressBar;
+	import javafx.scene.control.ContextMenu;
+	import javafx.scene.control.Label;
+	import javafx.scene.control.MenuItem;
+	import javafx.scene.control.ProgressBar;
 	import javafx.scene.image.Image;
 	import javafx.scene.image.ImageView;
 	import javafx.scene.layout.GridPane;
@@ -61,6 +61,7 @@ import javafx.scene.control.ProgressBar;
 	    private AnimationTimer timer;
 	    private Map<Enemy, ImageView> enemyViews = new HashMap<>();
 	    private boolean isPaused=false;
+	    private boolean gameSpeed=false;
 	    
 	    public void setPreviousScene(Scene scene) {
 	        this.previousScene = scene;
@@ -157,7 +158,7 @@ import javafx.scene.control.ProgressBar;
 		    			archer.setOnAction(ev -> {
 		    		       setTileBackground(tile,TileType.ARCHER_TOWER);
 		    		       map.setTile(r, c, new towerTile(TileType.ARCHER_TOWER));
-		    		       currentMap[r][c]=TileType.ARCHER_TOWER;
+   		    		       currentMap[r][c]=TileType.ARCHER_TOWER;
 		    		       tile.setOnAction(null);
 		    		    });
 		    			mage.setOnAction(ev -> {
@@ -196,10 +197,16 @@ import javafx.scene.control.ProgressBar;
 		                if (now - lastUpdate < 500_000_00) return;
 		                lastUpdate = now;
 		                
-		                if(!isPaused) {		               
+		                if(!isPaused) {	
 		                engine.update();	
 		                renderEnemies();			            		                
 		                updateHUD();
+		                
+		                if(gameSpeed) {
+		                	engine.update();	
+			                renderEnemies();			            		                
+			                updateHUD();
+		                }
 		                }
 		               
 	
@@ -320,5 +327,11 @@ import javafx.scene.control.ProgressBar;
 		@FXML
 		private void handlePause(){
 			isPaused=!isPaused;	
+			}
+	
+		@FXML
+		private void toggleSpeed() {
+			gameSpeed=!gameSpeed;
+			
 			}
 		}
