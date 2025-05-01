@@ -8,6 +8,7 @@ public abstract class Enemy {
 	protected int reward;
 	protected int row;
     protected int col;
+    public final int maxHP=100;
     
     public void setPosition(int row, int col) {
         this.row = row;

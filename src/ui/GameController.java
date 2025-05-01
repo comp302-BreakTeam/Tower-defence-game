@@ -64,6 +64,8 @@
 	    private Map<Enemy, ImageView> enemyViews = new HashMap<>();
 	    private boolean isPaused=false;
 	    private boolean gameSpeed=false;
+	    private Map<Enemy, ProgressBar> enemyHP = new HashMap<>();
+	    
 	    
 	    public void setPreviousScene(Scene scene) {
 	        this.previousScene = scene;
@@ -224,7 +226,7 @@
 		private void renderEnemies() {
 			for (Enemy e : engine.getActiveEnemies()) {
 				ImageView view = enemyViews.get(e);
-				
+				ProgressBar HP = enemyHP.get(e);
 				if (view == null) {
 					Image img;
 					if(e.getClass()==Knight.class) {
@@ -238,13 +240,23 @@
 					view.setFitWidth(TILE_WIDTH * 0.7);
 					view.setFitHeight(TILE_HEIGHT * 0.7);
 					enemyViews.put(e, view);
+					HP = new ProgressBar(1);
+					HP.setPrefHeight(10);
+					HP.setPrefWidth(TILE_WIDTH * 0.7);
+					HP.setStyle("-fx-accent: red;");
+					enemyHP.put(e, HP);
+					mapGrid.getChildren().add(HP);
 					mapGrid.getChildren().add(view);
 	                view.setTranslateX(e.getCol() * TILE_WIDTH);
 	                view.setTranslateY(e.getRow() * TILE_HEIGHT);
+	                HP.setTranslateX(view.getTranslateX());
+	                HP.setTranslateY(view.getTranslateY()-30);
+	                
 					
 				}
 				else {
 					TranslateTransition tt = new TranslateTransition(Duration.millis(300), view);
+					TranslateTransition hh = new TranslateTransition(Duration.millis(300), HP);
 					double targetx = e.getCol() * TILE_WIDTH ;
 	                double targety = e.getRow() * TILE_HEIGHT ;
 	                double movx = targetx - view.getTranslateX();
@@ -256,14 +268,19 @@
 						movy-=10;
 					}
 	                tt.setByX(movx);
+	                hh.setByX(movx);
 	                tt.setByY(movy);
+	                hh.setByY(movy);
 	                tt.play();
+	                hh.play();
+	                HP.setProgress(e.getHealth()/e.maxHP);
 				}
 			}
 			
 			for (Enemy e : enemyViews.keySet()) {
 				if (!engine.getActiveEnemies().contains(e)) {
 					mapGrid.getChildren().remove(enemyViews.get(e));
+					mapGrid.getChildren().remove(enemyHP.get(e));
 					
 				}
 			}
