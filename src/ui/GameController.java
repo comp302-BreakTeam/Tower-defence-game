@@ -143,27 +143,38 @@ import javafx.scene.control.ProgressBar;
 	    			tile.setPrefSize(TILE_WIDTH, TILE_HEIGHT);
 	    			setTileBackground(tile, currentMap[row][col] );
 	    			if(currentMap[row][col]==TileType.EMPTY_PLOT) {
-	    			tile.setOnAction(e -> {
-	    			ContextMenu menu = new ContextMenu();
-
-	    			MenuItem archer = new MenuItem("Archer Tower");
-	    			MenuItem mage = new MenuItem("Mage Tower");
-	    			MenuItem artillery = new MenuItem("Artillery Tower");
-	    			
-	    			archer.setOnAction(ev -> {
-	    		       setTileBackground(tile,TileType.ARCHER_TOWER);
-	    		    });
-	    			mage.setOnAction(ev -> {
-	    				setTileBackground(tile,TileType.MAGE_TOWER);
-	    		    });
-	    			artillery.setOnAction(ev -> {
-	    				setTileBackground(tile,TileType.ARTILLERY_TOWER);
-	    		    });
-	    			
-	    			menu.getItems().addAll(archer, mage, artillery);
-	    			menu.show(tile, Side.RIGHT, 0, 0);
-	    			
-	    			});
+	    				final int r = row;
+	    				final int c = col;
+		    			tile.setOnAction(e -> {
+		    			ContextMenu menu = new ContextMenu();
+	
+		    			MenuItem archer = new MenuItem("Archer Tower");
+		    			MenuItem mage = new MenuItem("Mage Tower");
+		    			MenuItem artillery = new MenuItem("Artillery Tower");
+		    		
+		    			archer.setOnAction(ev -> {
+		    		       setTileBackground(tile,TileType.ARCHER_TOWER);
+		    		       map.setTile(r, c, new towerTile(TileType.ARCHER_TOWER));
+		    		       currentMap[r][c]=TileType.ARCHER_TOWER;
+		    		       tile.setOnAction(null);
+		    		    });
+		    			mage.setOnAction(ev -> {
+		    				setTileBackground(tile,TileType.MAGE_TOWER);
+		    				map.setTile(r, c, new towerTile(TileType.MAGE_TOWER));
+		    				currentMap[r][c]=TileType.MAGE_TOWER;
+		    				tile.setOnAction(null);
+		    		    });
+		    			artillery.setOnAction(ev -> {
+		    				setTileBackground(tile,TileType.ARTILLERY_TOWER);
+		    				map.setTile(r, c, new towerTile(TileType.ARTILLERY_TOWER));
+		    				currentMap[r][c]=TileType.ARTILLERY_TOWER;
+		    				tile.setOnAction(null);
+		    		    });
+		    			
+		    			menu.getItems().addAll(archer, mage, artillery);
+		    			menu.show(tile, Side.RIGHT, 0, 0);
+		    			
+		    			});
 	    			}
 	    			mapGrid.add(tile, col, row);
 				}
