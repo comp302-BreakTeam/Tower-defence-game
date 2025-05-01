@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Knight extends Enemy{
 	protected int health = 100;
 	protected float speed = (float) 1.0;
-	protected int coin;
+	protected int reward = 10;
 	protected pathTile position;
 	
 	public Knight() {

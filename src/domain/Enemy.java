@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public abstract class Enemy {
 	protected int health = 100;
 	protected float speed;
-	protected int coin;
+	protected int reward = 10;
 	protected pathTile position;
 	
 	public void damaged() {
