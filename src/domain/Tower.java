@@ -47,7 +47,8 @@ public abstract class Tower {
 		this.cost = cost;
 	}
 
-	public void fireProjectile(){
+	public void fireProjectile(Enemy enemy){
+    	Projectile projectile = new Projectile(this, enemy, getDamage());
     	
     }
 
