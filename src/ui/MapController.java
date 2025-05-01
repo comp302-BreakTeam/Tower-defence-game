@@ -2,7 +2,7 @@ package ui;
 
 import java.io.IOException;
 
-import domain.Map;
+import domain.Maps;
 import domain.SaveMap;
 import domain.TileType;
 import domain.fixEmptyTile;
@@ -36,27 +36,27 @@ public class MapController {
     @FXML
 	private void handleSave() throws IOException {
     	if (!validateMap()) {
-            System.out.println("Map validation failed. Cannot save.");
-            Alert alert= new Alert(AlertType.ERROR,"Map validation failed. Cannot save.");
+            System.out.println("Maps validation failed. Cannot save.");
+            Alert alert= new Alert(AlertType.ERROR,"Maps validation failed. Cannot save.");
     		alert.showAndWait();
             return; 
         }
     	TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Save Map");
+        dialog.setTitle("Save Maps");
         dialog.setHeaderText("Enter a name for your map:");
-        dialog.setContentText("Map Name:");
+        dialog.setContentText("Maps Name:");
         java.util.Optional<String> result = dialog.showAndWait();
         
         if (result.isPresent()) {
             String mapName = result.get().trim();
             
             if (mapName.isEmpty()) {
-                System.out.println("Map name can't be empty.");
-                Alert alert= new Alert(AlertType.ERROR,"Map name can't be empty");
+                System.out.println("Maps name can't be empty.");
+                Alert alert= new Alert(AlertType.ERROR,"Maps name can't be empty");
         		alert.showAndWait();
                 return;
             }
-			Map map = new Map();
+			Maps map = new Maps();
 			for (int row = 0; row < ROWS; row++) {
 				for (int col = 0; col < COLS; col++) {
 					TileType type = currentMap[row][col];

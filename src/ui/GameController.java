@@ -1,7 +1,7 @@
 package ui;
 
 
-import domain.Map;
+import domain.Maps;
 import domain.Player;
 import domain.TileType;
 import javafx.fxml.FXML;
@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 
 public class GameController {
 	public Player player;
-	public Map map;
+	public Maps map;
 	@FXML
 	private GridPane mapGrid;
 	private Scene previousScene;
@@ -68,7 +68,7 @@ public class GameController {
 
 
 
-	public void setMap(Map map) {
+	public void setMap(Maps map) {
 		this.map = map;
 	}
 

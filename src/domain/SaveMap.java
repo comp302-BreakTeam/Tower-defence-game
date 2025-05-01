@@ -8,7 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 public class SaveMap {
-	public static void saveMap(Map map, String filename) throws IOException {
+	public static void saveMap(Maps map, String filename) throws IOException {
 		File dir = new File("maps");
         if (!dir.exists()) {
             dir.mkdir();
@@ -18,9 +18,9 @@ public class SaveMap {
         }
         
 	}
-	public static Map loadMap(String filename) throws IOException, ClassNotFoundException {
+	public static Maps loadMap(String filename) throws IOException, ClassNotFoundException {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File("maps", filename)))) {
-            return (Map) ois.readObject();
+            return (Maps) ois.readObject();
         }
     }
 

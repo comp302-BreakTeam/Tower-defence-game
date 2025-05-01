@@ -5,7 +5,7 @@ package ui;
 import java.io.File;
 import java.io.IOException;
 
-import domain.Map;
+import domain.Maps;
 import domain.Player;
 import domain.SaveMap;
 import javafx.fxml.FXML;
@@ -86,7 +86,7 @@ public class MapSelectorController {
 			Alert alert= new Alert(AlertType.ERROR,"No maps selected.");
     		alert.showAndWait();
 		}
-		Map loadedMap = SaveMap.loadMap(selectedMap + ".dat");
+		Maps loadedMap = SaveMap.loadMap(selectedMap + ".dat");
 		
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Game.fxml"));
         Parent root = loader.load();
