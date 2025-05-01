@@ -58,7 +58,7 @@ import javafx.scene.control.ProgressBar;
 	    private List<int[]> path;
 	    private AnimationTimer timer;
 	    private Map<Enemy, ImageView> enemyViews = new HashMap<>();
-	    
+	    private boolean isPaused=false;
 	    
 	    public void setPreviousScene(Scene scene) {
 	        this.previousScene = scene;
@@ -193,10 +193,13 @@ import javafx.scene.control.ProgressBar;
 		            public void handle(long now) {
 		                if (now - lastUpdate < 500_000_00) return;
 		                lastUpdate = now;
-	
-		                engine.update();
-		                renderEnemies();
+		                
+		                if(!isPaused) {		               
+		                engine.update();	
+		                renderEnemies();			            		                
 		                updateHUD();
+		                }
+		               
 	
 		                if (engine.isGameOver()) {
 		                    timer.stop();
@@ -312,4 +315,8 @@ import javafx.scene.control.ProgressBar;
 		    }
 		    return false;
 		}
-	}
+		@FXML
+		private void handlePause(){
+			isPaused=!isPaused;	
+			}
+		}
