@@ -26,7 +26,9 @@ public class OptionController {
 
 @FXML
 public void initialize() {
+    graphicsComboBox.getItems().addAll("Low", "Medium", "High");
     graphicsComboBox.setValue("Medium"); // default
+
     backButton.setOnAction(e -> {
         if (previousScene != null) {
             Stage stage = (Stage) backButton.getScene().getWindow();
