@@ -3,34 +3,25 @@ package domain;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Queue;
 
 public class Wave {
-	private ArrayList<Enemy> enemies = new ArrayList();
-	private long spawnInterval;
+	private Queue<Enemy> enemies = new LinkedList<Enemy>();
 	private int waveSize;
-	private float enemySpeed;
-	public Wave(long spawnInterval, int waveSize) {
-		super();
+	public Wave(int waveSize) {
 		int i=0;
 		for(i=0; i<waveSize/2; i++) {
-			enemies.set(i, new Goblin());
+			enemies.add(new Goblin());
 		}for(int k=i; k<waveSize; k++) {
-			enemies.set(i, new Knight());
+			enemies.add(new Knight());
 		}
 		i=0;
-		this.spawnInterval = spawnInterval;
 		this.waveSize = waveSize;
 	}
 	public void startWave() {
 		for(Enemy e:enemies) {
 			e.moveForward();
-			try {
-				wait(spawnInterval);
-			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 		}
 	}
 	public boolean hasNextEnemy() {
@@ -42,7 +33,7 @@ public class Wave {
 	}
 	public Enemy getNextEnemy() {
 		if(hasNextEnemy()) {
-			return enemies.get(0);
+			return enemies.poll();
 		}
 		return null;
 		
