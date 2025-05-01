@@ -8,7 +8,7 @@ import java.util.Queue;
 
 public class Wave {
 	private Queue<Enemy> enemies = new LinkedList<Enemy>();
-	private int waveSize;
+
 	public Wave(int waveSize) {
 		int i=0;
 		for(i=0; i<waveSize/2; i++) {
@@ -16,33 +16,19 @@ public class Wave {
 		}for(int k=i; k<waveSize; k++) {
 			enemies.add(new Knight());
 		}
-		i=0;
-		this.waveSize = waveSize;
-	}
-	public void startWave() {
-		for(Enemy e:enemies) {
-			e.moveForward();
-		}
-	}
-	public boolean hasNextEnemy() {
-		if(!enemies.isEmpty()) {
-			return true;
-		}
-		return false;
+		
 		
 	}
-	public Enemy getNextEnemy() {
-		if(hasNextEnemy()) {
-			return enemies.poll();
-		}
-		return null;
-		
-	}
-	public boolean isFinished() {
-		if(!hasNextEnemy()) {
-			return true;
-		}
-		return false;
-		
-	}
+	
+	 public Enemy nextEnemy() {
+	        return enemies.poll();
+	    }
+
+	    public boolean isEmpty() {
+	        return enemies.isEmpty();
+	    }
+
+	    public int size() {
+	        return enemies.size();
+	    }
 }
