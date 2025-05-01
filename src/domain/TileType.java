@@ -5,5 +5,8 @@ public enum TileType {
     GRASS,
     EMPTY_PLOT,
     ROCK,
-    TREE
+    TREE,
+    ARCHER_TOWER,
+    MAGE_TOWER,
+    ARTILLERY_TOWER
 }

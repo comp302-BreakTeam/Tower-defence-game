@@ -14,10 +14,13 @@
 	import javafx.animation.AnimationTimer;
 	import javafx.animation.TranslateTransition;
 	import javafx.fxml.FXML;
-	import javafx.scene.Scene;
+import javafx.geometry.Side;
+import javafx.scene.Scene;
 	import javafx.scene.control.Button;
-	import javafx.scene.control.Label;
-	import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.ProgressBar;
 	import javafx.scene.image.Image;
 	import javafx.scene.image.ImageView;
 	import javafx.scene.layout.GridPane;
@@ -109,6 +112,16 @@
 	            case EMPTY_PLOT:
 	                imagePath = "assets/empty_plot.png";
 	                break;
+	            case ARCHER_TOWER:
+	            	imagePath = "assets/Tower_archer128.png";
+	            	break;
+	            case MAGE_TOWER:
+	            	imagePath = "assets/Tower_spell128.png";
+	            	break;
+	            case ARTILLERY_TOWER:
+	            	imagePath = "assets/Tower_bomb128.png";
+	            	break;
+	            	
 	            default:
 	            	imagePath = "assets/grass.png";
 	            	break;
@@ -129,7 +142,29 @@
 					Button tile = new Button();
 	    			tile.setPrefSize(TILE_WIDTH, TILE_HEIGHT);
 	    			setTileBackground(tile, currentMap[row][col] );
-					
+	    			if(currentMap[row][col]==TileType.EMPTY_PLOT) {
+	    			tile.setOnAction(e -> {
+	    			ContextMenu menu = new ContextMenu();
+
+	    			MenuItem archer = new MenuItem("Archer Tower");
+	    			MenuItem mage = new MenuItem("Mage Tower");
+	    			MenuItem artillery = new MenuItem("Artillery Tower");
+	    			
+	    			archer.setOnAction(ev -> {
+	    		       setTileBackground(tile,TileType.ARCHER_TOWER);
+	    		    });
+	    			mage.setOnAction(ev -> {
+	    				setTileBackground(tile,TileType.MAGE_TOWER);
+	    		    });
+	    			artillery.setOnAction(ev -> {
+	    				setTileBackground(tile,TileType.ARTILLERY_TOWER);
+	    		    });
+	    			
+	    			menu.getItems().addAll(archer, mage, artillery);
+	    			menu.show(tile, Side.RIGHT, 0, 0);
+	    			
+	    			});
+	    			}
 	    			mapGrid.add(tile, col, row);
 				}
 				
