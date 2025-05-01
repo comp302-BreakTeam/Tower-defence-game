@@ -333,7 +333,13 @@
 	
 		@FXML
 		private void toggleSpeed() {
-			gameSpeed=!gameSpeed;
 			
+			gameSpeed=!gameSpeed;
+			if(gameSpeed) {
+				toggle.setText("FAST");
 			}
+			else {
+				toggle.setText("NORMAL");
+			}
+		}
 		}

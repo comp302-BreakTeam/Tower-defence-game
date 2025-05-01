@@ -84,7 +84,7 @@
                   <Font name="Clarendon BT Bold" size="20.0" />
                </font>
             </Button>
-            <Button fx:id="toggle" layoutX="855.0" layoutY="12.0" mnemonicParsing="false" onAction="#toggleSpeed" style="-fx-background-color: red;" text="TOGGLE">
+            <Button fx:id="toggle" layoutX="855.0" layoutY="12.0" mnemonicParsing="false" onAction="#toggleSpeed" style="-fx-background-color: red;" text="NORMAL">
                <font>
                   <Font name="Clarendon BT Bold" size="20.0" />
                </font>
