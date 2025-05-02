@@ -12,23 +12,44 @@
             prefWidth="600.0" prefHeight="400.0">
 
     <center>
-        <VBox spacing="20.0" alignment="CENTER">
+        <VBox spacing="25.0" alignment="CENTER">
             <children>
                 <Label text="Options" style="-fx-font-size: 24;" />
                 
-                <HBox spacing="10">
+                <HBox spacing="10" alignment="CENTER">
                     <children>
-                        <Label text="Volume:" />
+                        <Label text="Volume:" style="-fx-font-size: 16;" />
                         <Slider fx:id="volumeSlider" min="0" max="100" value="50" />
                     </children>
                 </HBox>
-
-                <HBox spacing="10">
-                    <children>
-                        <Label text="Graphics Quality:" />
-                        <ComboBox fx:id="graphicsComboBox" />
-                    </children>
-                </HBox>
+                
+                <HBox spacing="10" alignment="CENTER">
+				    <children>
+				        <Label text="Player Lives:" style="-fx-font-size: 16;" />
+				        <Spinner fx:id="livesSpinner" />
+				    </children>
+				</HBox>
+				
+				<HBox spacing="10" alignment="CENTER">
+				    <children>
+				        <Label text="Enemy Speed:" style="-fx-font-size: 16;" />
+				        <Spinner fx:id="enemySpeedSpinner" />
+				    </children>
+				</HBox>
+				
+				<HBox spacing="10" alignment="CENTER">
+				    <children>
+				        <Label text="Starting Gold:" style="-fx-font-size: 16;" />
+				        <Spinner fx:id="goldSpinner" />
+				    </children>
+				</HBox>
+				
+				<HBox spacing="10" alignment="CENTER">
+				    <children>
+				        <Label text="Wave Number:" style="-fx-font-size: 16;" />
+				        <Spinner fx:id="waveSpinner" />
+				    </children>
+				</HBox>
 
                 <HBox spacing="10" alignment="CENTER">
 				    <children>
