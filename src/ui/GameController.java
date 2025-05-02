@@ -79,7 +79,6 @@
 			playerName.setText(player.getName());
 			numHealth.setText(""+player.getLives()+"");
 			numCoin.setText(""+player.getGold()+"");
-			numWave.setText(""+player.getWave()+"");
 			Image healthImage = new Image(getClass().getResourceAsStream("assets/health.png"));
 			health.setImage(healthImage);
 			Image coinImage = new Image(getClass().getResourceAsStream("assets/gold.png"));
@@ -188,7 +187,8 @@
 				
 			}
 			this.path=findPath();
-			engine = new GameEngine(path, 10);
+			engine = new GameEngine(path, player.getWaveSize(), player.getMaxWave());
+			updateHUD();
 	        startGameLoop();
 		}
 		
