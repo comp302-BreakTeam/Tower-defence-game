@@ -32,13 +32,6 @@
 				
 				<HBox spacing="10" alignment="CENTER">
 				    <children>
-				        <Label text="Enemy Speed:" style="-fx-font-size: 16;" />
-				        <Spinner fx:id="enemySpeedSpinner" />
-				    </children>
-				</HBox>
-				
-				<HBox spacing="10" alignment="CENTER">
-				    <children>
 				        <Label text="Starting Gold:" style="-fx-font-size: 16;" />
 				        <Spinner fx:id="goldSpinner" />
 				    </children>
@@ -46,8 +39,15 @@
 				
 				<HBox spacing="10" alignment="CENTER">
 				    <children>
-				        <Label text="Wave Number:" style="-fx-font-size: 16;" />
-				        <Spinner fx:id="waveSpinner" />
+				        <Label text="Max Wave:" style="-fx-font-size: 16;" />
+				        <Spinner fx:id="maxWaveSpinner" />
+				    </children>
+				</HBox>
+				
+				<HBox spacing="10" alignment="CENTER">
+				    <children>
+				        <Label text="Wave Size:" style="-fx-font-size: 16;" />
+				        <Spinner fx:id="waveSizeSpinner" />
 				    </children>
 				</HBox>
 

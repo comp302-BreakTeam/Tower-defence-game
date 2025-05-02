@@ -14,15 +14,15 @@ public class OptionController {
 	public Player player;
 	private Scene previousScene;
 	private static double savedVolume = 50;
-	private static int savedLives = 20;
-	private static double savedSpeed = 1.0;
+	private static int savedLives = 10;
 	private static int savedGold = 500;
-	private static int savedWave = 1;
+	private static int savedWaveSize = 10;
+	private static int savedMaxWave = 5;
 	private double originalVolume;
 	private int originalLives;
-	private double originalSpeed;
 	private int originalGold;
-	private int originalWave;
+	private int originalMaxWave;
+	private int originalWaveSize;
 
 	public void setPlayer(Player player) {
 		this.player= player;
@@ -34,9 +34,9 @@ public class OptionController {
     }
 @FXML private Slider volumeSlider;
 @FXML private Spinner<Integer> livesSpinner;
-@FXML private Spinner<Double> enemySpeedSpinner;
 @FXML private Spinner<Integer> goldSpinner;
-@FXML private Spinner<Integer> waveSpinner;
+@FXML private Spinner<Integer> maxWaveSpinner;
+@FXML private Spinner<Integer> waveSizeSpinner;
 @FXML private Button saveButton;
 @FXML private Button discardButton;
 
@@ -45,15 +45,16 @@ public void initialize() {
     
     livesSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 99, savedLives));
     goldSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10000, savedGold));
-    waveSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, savedWave));
-    enemySpeedSpinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0.5, 5.0, savedSpeed, 0.5));
+    maxWaveSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, savedMaxWave));
+    waveSizeSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, savedWaveSize));
+    
 	
     volumeSlider.setValue(savedVolume);
     
-    originalSpeed = savedSpeed;
     originalLives = savedLives;
     originalGold = savedGold;
-    originalWave = savedWave;
+    originalMaxWave = savedMaxWave;
+    originalWaveSize = savedWaveSize;
 
     
     javafx.application.Platform.runLater(() -> {
@@ -63,9 +64,16 @@ public void initialize() {
     saveButton.setOnAction(e -> {
     	savedVolume = volumeSlider.getValue();
         savedLives = livesSpinner.getValue();
-        savedSpeed = enemySpeedSpinner.getValue();
         savedGold = goldSpinner.getValue();
-        savedWave = waveSpinner.getValue();
+        savedMaxWave = maxWaveSpinner.getValue();
+        savedWaveSize = waveSizeSpinner.getValue();
+        
+        if (player != null) {
+            player.setLives(savedLives);
+            player.setGold(savedGold);
+            player.setMaxWave(savedMaxWave);
+            player.setWaveSize(savedWaveSize);
+        }
 
         if (previousScene != null) {
             Stage stage = (Stage) saveButton.getScene().getWindow();
@@ -76,9 +84,9 @@ public void initialize() {
     discardButton.setOnAction(e -> {
     	volumeSlider.setValue(originalVolume);
         livesSpinner.getValueFactory().setValue(originalLives);
-        enemySpeedSpinner.getValueFactory().setValue(originalSpeed);
         goldSpinner.getValueFactory().setValue(originalGold);
-        waveSpinner.getValueFactory().setValue(originalWave);
+        maxWaveSpinner.getValueFactory().setValue(originalMaxWave);
+        waveSizeSpinner.getValueFactory().setValue(originalWaveSize);
 
         if (previousScene != null) {
             Stage stage = (Stage) discardButton.getScene().getWindow();
