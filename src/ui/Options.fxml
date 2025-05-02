@@ -30,7 +30,12 @@
                     </children>
                 </HBox>
 
-                <Button text="Back" fx:id="backButton" />
+                <HBox spacing="10" alignment="CENTER">
+				    <children>
+				        <Button text="Save &amp; Exit" fx:id="saveButton" />
+				        <Button text="Discard &amp; Exit" fx:id="discardButton" />
+				    </children>
+				</HBox>
             </children>
         </VBox>
     </center>
