@@ -3,13 +3,15 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.collections.FXCollections?>
 
-
-<BorderPane xmlns="http://javafx.com/javafx/23.0.1" 
-            xmlns:fx="http://javafx.com/fxml/1" 
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="ui.OptionController"
-            prefWidth="600.0" prefHeight="400.0">
+            prefWidth="600.0" prefHeight="500.0">
+
+    <stylesheets>
+        <URL value="@../resources/options-style.css"/>
+    </stylesheets>
 
     <center>
         <VBox spacing="25.0" alignment="CENTER">
@@ -18,45 +20,45 @@
                 
                 <HBox spacing="10" alignment="CENTER">
                     <children>
-                        <Label text="Volume:" style="-fx-font-size: 16;" />
+                        <Label text="Volume:" />
                         <Slider fx:id="volumeSlider" min="0" max="100" value="50" />
                     </children>
                 </HBox>
-                
-                <HBox spacing="10" alignment="CENTER">
-				    <children>
-				        <Label text="Player Lives:" style="-fx-font-size: 16;" />
-				        <Spinner fx:id="livesSpinner" />
-				    </children>
-				</HBox>
-				
-				<HBox spacing="10" alignment="CENTER">
-				    <children>
-				        <Label text="Starting Gold:" style="-fx-font-size: 16;" />
-				        <Spinner fx:id="goldSpinner" />
-				    </children>
-				</HBox>
-				
-				<HBox spacing="10" alignment="CENTER">
-				    <children>
-				        <Label text="Max Wave:" style="-fx-font-size: 16;" />
-				        <Spinner fx:id="maxWaveSpinner" />
-				    </children>
-				</HBox>
-				
-				<HBox spacing="10" alignment="CENTER">
-				    <children>
-				        <Label text="Wave Size:" style="-fx-font-size: 16;" />
-				        <Spinner fx:id="waveSizeSpinner" />
-				    </children>
-				</HBox>
 
                 <HBox spacing="10" alignment="CENTER">
-				    <children>
-				        <Button text="Save &amp; Exit" fx:id="saveButton" />
-				        <Button text="Discard &amp; Exit" fx:id="discardButton" />
-				    </children>
-				</HBox>
+                    <children>
+                        <Label text="Player Lives:" />
+                        <Spinner fx:id="livesSpinner" />
+                    </children>
+                </HBox>
+
+                <HBox spacing="10" alignment="CENTER">
+                    <children>
+                        <Label text="Starting Gold:" />
+                        <Spinner fx:id="goldSpinner" />
+                    </children>
+                </HBox>
+
+                <HBox spacing="10" alignment="CENTER">
+                    <children>
+                        <Label text="Max Wave:" />
+                        <Spinner fx:id="maxWaveSpinner" />
+                    </children>
+                </HBox>
+
+                <HBox spacing="10" alignment="CENTER">
+                    <children>
+                        <Label text="Wave Size:" />
+                        <Spinner fx:id="waveSizeSpinner" />
+                    </children>
+                </HBox>
+
+                <HBox spacing="20" alignment="CENTER">
+                    <children>
+                        <Button text="Save &amp; Exit" fx:id="saveButton" />
+                        <Button text="Discard &amp; Exit" fx:id="discardButton" />
+                    </children>
+                </HBox>
             </children>
         </VBox>
     </center>
