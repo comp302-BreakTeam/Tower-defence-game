@@ -21,6 +21,7 @@ public class LoginController {
 
     @FXML
     private Button button;
+    
     @FXML
     private void playerLogin() throws IOException {
     	String playerName = name.getText().trim();

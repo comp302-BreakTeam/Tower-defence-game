@@ -6,12 +6,7 @@
 	import java.util.HashMap;
 	import java.util.List;
 	import java.util.Map;
-	
-	import domain.GameEngine;
-	import domain.Maps;
-	import domain.Player;
-	import domain.TileType;
-	import javafx.animation.AnimationTimer;
+    import javafx.animation.AnimationTimer;
 	import javafx.animation.TranslateTransition;
 	import javafx.fxml.FXML;
 	import javafx.geometry.Side;
@@ -155,33 +150,7 @@
 	    				final int r = row;
 	    				final int c = col;
 		    			tile.setOnAction(e -> {
-		    			ContextMenu menu = new ContextMenu();
-	
-		    			MenuItem archer = new MenuItem("Archer Tower");
-		    			MenuItem mage = new MenuItem("Mage Tower");
-		    			MenuItem artillery = new MenuItem("Artillery Tower");
-		    		
-		    			archer.setOnAction(ev -> {
-		    		       setTileBackground(tile,TileType.ARCHER_TOWER);
-		    		       map.setTile(r, c, new towerTile(TileType.ARCHER_TOWER));
-   		    		       currentMap[r][c]=TileType.ARCHER_TOWER;
-		    		       tile.setOnAction(null);
-		    		    });
-		    			mage.setOnAction(ev -> {
-		    				setTileBackground(tile,TileType.MAGE_TOWER);
-		    				map.setTile(r, c, new towerTile(TileType.MAGE_TOWER));
-		    				currentMap[r][c]=TileType.MAGE_TOWER;
-		    				tile.setOnAction(null);
-		    		    });
-		    			artillery.setOnAction(ev -> {
-		    				setTileBackground(tile,TileType.ARTILLERY_TOWER);
-		    				map.setTile(r, c, new towerTile(TileType.ARTILLERY_TOWER));
-		    				currentMap[r][c]=TileType.ARTILLERY_TOWER;
-		    				tile.setOnAction(null);
-		    		    });
-		    			
-		    			menu.getItems().addAll(archer, mage, artillery);
-		    			menu.show(tile, Side.RIGHT, 0, 0);
+		    			emptyPlotAction(r, c, tile); 
 		    			
 		    			});
 	    			}
@@ -370,5 +339,77 @@
 			else {
 				toggle.setText("NORMAL");
 			}
+		}
+		private void towerTileAction(int r,int c,Button tile) {
+			ContextMenu menu = new ContextMenu();
+			MenuItem upgrade = new MenuItem("Upgrade");
+			MenuItem sell = new MenuItem("Sell");
+			upgrade.setOnAction(e ->{
+				towerTile twrTile= (towerTile) map.getTile(r, c);
+				Tower tower= twrTile.getTower();
+				if(player.canAfford(tower.getCost())) {
+					tower.upgradeTower();
+				}
+				
+				
+			});
+			sell.setOnAction(e->{
+				towerTile twrTile= (towerTile) map.getTile(r, c);
+				Tower tower= twrTile.getTower();
+				player.addGold(tower.sellTower());
+				map.setTile(r, c, new fixEmptyTile(TileType.EMPTY_PLOT));
+				setTileBackground(tile, TileType.EMPTY_PLOT);
+				tile.setOnAction(ev -> emptyPlotAction(r, c, tile)); 
+			});
+			 menu.getItems().addAll(upgrade, sell);
+			 menu.show(tile, Side.RIGHT, 0, 0);
+		}
+		private void emptyPlotAction(int r,int c,Button tile){
+			ContextMenu menu = new ContextMenu();
+			
+			MenuItem archer = new MenuItem("Archer Tower");
+			MenuItem mage = new MenuItem("Mage Tower");
+			MenuItem artillery = new MenuItem("Artillery Tower");
+		
+			archer.setOnAction(ev -> {
+				Archer_Tower tower = new Archer_Tower();
+				if(player.canAfford(tower.getCost())) {
+					setTileBackground(tile,TileType.ARCHER_TOWER);
+	    		       map.setTile(r, c, new towerTile(TileType.ARCHER_TOWER));
+	    		       towerTile twrTile= (towerTile) map.getTile(r, c);
+	    		       twrTile.setTower(tower);
+		    		       currentMap[r][c]=TileType.ARCHER_TOWER;
+		    		       tile.setOnAction(e -> towerTileAction(r, c, tile));
+				}
+		       
+		    });
+			mage.setOnAction(ev -> {
+				Mage_Tower tower = new Mage_Tower();
+				if(player.canAfford(tower.getCost())) {
+					setTileBackground(tile,TileType.MAGE_TOWER);
+    				map.setTile(r, c, new towerTile(TileType.MAGE_TOWER));
+    				towerTile twrTile= (towerTile) map.getTile(r, c);
+    				twrTile.setTower(tower);
+    				currentMap[r][c]=TileType.MAGE_TOWER;
+    				tile.setOnAction(e -> towerTileAction(r, c, tile));
+				}
+				
+		    });
+			artillery.setOnAction(ev -> {
+				Artillery_Tower tower = new Artillery_Tower();
+				if(player.canAfford(tower.getCost())) {
+					setTileBackground(tile,TileType.ARTILLERY_TOWER);
+    				map.setTile(r, c, new towerTile(TileType.ARTILLERY_TOWER));
+    				towerTile twrTile= (towerTile) map.getTile(r, c);
+    				twrTile.setTower(tower);
+    				currentMap[r][c]=TileType.ARTILLERY_TOWER;
+    				tile.setOnAction(e -> towerTileAction(r, c, tile));
+				}
+				
+		    });
+			
+			menu.getItems().addAll(archer, mage, artillery);
+			menu.show(tile, Side.RIGHT, 0, 0);
+			
 		}
 		}

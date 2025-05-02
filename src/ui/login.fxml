@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21.0.7" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.LoginController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.LoginController">
    <center>
       <Pane BorderPane.alignment="CENTER">
          <children>
@@ -38,7 +38,7 @@
                   <Image url="@Assets/playbutton.png" />
                </image>
             </ImageView>
-            <Button fx:id="button" blendMode="SRC_ATOP" graphicTextGap="0.0" layoutX="539.0" layoutY="711.0" mnemonicParsing="false" onAction="#playerLogin" opacity="0.0" prefHeight="108.0" prefWidth="148.0">
+            <Button fx:id="button" blendMode="SRC_ATOP" defaultButton="true" graphicTextGap="0.0" layoutX="539.0" layoutY="711.0" mnemonicParsing="false" onAction="#playerLogin" opacity="0.0" prefHeight="108.0" prefWidth="148.0">
                <font>
                   <Font size="1.0" />
                </font>
