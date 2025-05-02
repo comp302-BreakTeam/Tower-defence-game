@@ -13,18 +13,19 @@ public class GameEngine {
     private int spawnRate = 30;
     private int waveSize = 10;
     private int waveNumber = 1;
-    private final int maxWaves = 5;
+    private int maxWaves = 5;
     private int waveCooldown = 180; 
     private int cooldownCounter = 0;
     private boolean waitingForNextWave = false;
     private boolean gameOver = false;
     private Map<Enemy, Float> moveCooldown = new HashMap<>();
     
-    public GameEngine(List<int[]> path, int waveSize) {
+    public GameEngine(List<int[]> path, int waveSize, int maxWaves) {
         this.path = path;
         this.waveSize = waveSize;
         this.currentWave = new Wave(waveSize);
         this.activeEnemies = new ArrayList<>();
+        this.maxWaves = maxWaves;
     }
     
     public void update() {
@@ -98,10 +99,6 @@ public class GameEngine {
 
     public boolean isWaveOver() {
         return currentWave.isEmpty() && activeEnemies.isEmpty();
-    }
-    
-    public void setWaveNumber(int number) {
-    	this.waveNumber = number;
     }
     
     public int getWaveNumber() {

@@ -6,28 +6,40 @@ public class Player {
 	private String name;
     private int gold;
 	private int lives;
-	private int wave;
+	private int maxWave;
+	private int waveSize;
     
     public Player(String name, int lives, int gold) {
 		this.name= name;
 		this.lives= lives;
 		this.gold= gold;
-		this.wave= 1;
+		this.waveSize= 10;
+		this.maxWave = 5;
 	}
+    
+    public void setGold(int gold) {
+    	this.gold = gold;
+    }
     
     public void setLives(int lives) {
     	this.lives = lives;
     }
     
-    public int getWave() {
-		return wave;
+	public int getMaxWave() {
+		return maxWave;
 	}
 
-
-	public void setWave(int wave) {
-		this.wave = wave;
+	public void setMaxWave(int maxWave) {
+		this.maxWave = maxWave;
 	}
 
+	public int getWaveSize() {
+		return waveSize;
+	}
+
+	public void setWaveSize(int waveSize) {
+		this.waveSize = waveSize;
+	}
 
 	public void reducePlayerLives(){
     	--lives;
