@@ -48,6 +48,11 @@ public void initialize() {
     maxWaveSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, savedMaxWave));
     waveSizeSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, savedWaveSize));
     
+    livesSpinner.setEditable(true);
+    goldSpinner.setEditable(true);
+    maxWaveSpinner.setEditable(true);
+    waveSizeSpinner.setEditable(true);
+    
 	
     volumeSlider.setValue(savedVolume);
     
