@@ -99,7 +99,11 @@ public class GameEngine {
     public boolean isWaveOver() {
         return currentWave.isEmpty() && activeEnemies.isEmpty();
     }
-
+    
+    public void setWaveNumber(int number) {
+    	this.waveNumber = number;
+    }
+    
     public int getWaveNumber() {
         return waveNumber;
     }

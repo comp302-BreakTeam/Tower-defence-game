@@ -15,7 +15,10 @@ public class Player {
 		this.wave= 1;
 	}
     
-
+    public void setLives(int lives) {
+    	this.lives = lives;
+    }
+    
     public int getWave() {
 		return wave;
 	}
