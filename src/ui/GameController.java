@@ -53,6 +53,8 @@
 	    @FXML
 	    private ImageView wave;
 	    @FXML
+	    private ImageView gameOver;
+	    @FXML
 		private Button back;
 	    @FXML
 	    private Button pause;
@@ -65,7 +67,8 @@
 	    private boolean isPaused=false;
 	    private boolean gameSpeed=false;
 	    private Map<Enemy, ProgressBar> enemyHP = new HashMap<>();
-	    
+	    private int defaultHealth;
+	    private int defaultCoins;
 	    
 	    public void setPreviousScene(Scene scene) {
 	        this.previousScene = scene;
@@ -187,7 +190,9 @@
 				
 			}
 			this.path=findPath();
-			engine = new GameEngine(path, player.getWaveSize(), player.getMaxWave());
+			defaultCoins=player.getGold();
+			defaultHealth=player.getLives();
+			engine = new GameEngine(path, player.getWaveSize(), player.getMaxWave(),player);
 			updateHUD();
 	        startGameLoop();
 		}
@@ -216,6 +221,10 @@
 	
 		                if (engine.isGameOver()) {
 		                    timer.stop();
+		                    gameOver.setVisible(true);
+		                    mapGrid.getChildren().remove(gameOver);
+		                    mapGrid.getChildren().add(gameOver);
+		                    
 		                    
 		                }
 		            }
@@ -255,8 +264,8 @@
 					
 				}
 				else {
-					TranslateTransition tt = new TranslateTransition(Duration.millis(300), view);
-					TranslateTransition hh = new TranslateTransition(Duration.millis(300), HP);
+					TranslateTransition tt = new TranslateTransition(Duration.millis(250), view);
+					TranslateTransition hh = new TranslateTransition(Duration.millis(250), HP);
 					double targetx = e.getCol() * TILE_WIDTH ;
 	                double targety = e.getRow() * TILE_HEIGHT ;
 	                double movx = targetx - view.getTranslateX();
@@ -293,6 +302,9 @@
 	    }
 		@FXML
 		private void handleBack() {
+			isPaused=true;
+			player.setGold(defaultCoins);
+			player.setLives(defaultHealth);
 			Stage stage = (Stage)back.getScene().getWindow();
 			stage.setScene(previousScene); 
 			stage.setTitle("Main Menu");

@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -49,6 +50,13 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
+         <children>
+            <ImageView fx:id="gameOver" fitHeight="300.0" fitWidth="626.0" visible="false" GridPane.columnIndex="3" GridPane.rowIndex="6">
+               <image>
+                  <Image url="@Assets/gameover.png" />
+               </image>
+            </ImageView>
+         </children>
       </GridPane>
    </center>
    <top>

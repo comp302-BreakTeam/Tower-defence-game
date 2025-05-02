@@ -33,6 +33,8 @@ public class MapController {
     private GridPane mapGrid;
     @FXML
     private Button saveButton;
+    @FXML
+	private Button back;
     
     @FXML
 	private void handleSave() throws IOException {
@@ -239,6 +241,13 @@ public class MapController {
     	return true;
     	
     }
+    @FXML
+	private void handleBack() {
+		Stage stage = (Stage)back.getScene().getWindow();
+		stage.setScene(previousScene); 
+		stage.setTitle("Main Menu");
+        stage.show();
+	}
     
     
     

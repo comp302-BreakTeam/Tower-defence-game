@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 public class GameEngine {
+	private Player player;
 	private Wave currentWave;
 	private List<int[]> path;
 	private List<Enemy> activeEnemies;
@@ -20,12 +21,13 @@ public class GameEngine {
     private boolean gameOver = false;
     private Map<Enemy, Float> moveCooldown = new HashMap<>();
     
-    public GameEngine(List<int[]> path, int waveSize, int maxWaves) {
+    public GameEngine(List<int[]> path, int waveSize, int maxWaves,Player player) {
         this.path = path;
         this.waveSize = waveSize;
         this.currentWave = new Wave(waveSize);
         this.activeEnemies = new ArrayList<>();
         this.maxWaves = maxWaves;
+        this.player=player;
     }
     
     public void update() {
@@ -62,6 +64,11 @@ public class GameEngine {
     			 e.setPosition(next[0], next[1]);
     		 }else {
                  toRemove.add(e);
+                 player.reducePlayerLives();
+                 if(player.getLives()<=0) {
+                	 gameOver=true;
+                	 return;
+                 }
              }
     		 
     	 }

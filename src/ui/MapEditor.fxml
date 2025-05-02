@@ -70,6 +70,11 @@
                   <Font name="Clarendon BT Bold" size="20.0" />
                </font>
             </Button>
+            <Button fx:id="back" alignment="CENTER_RIGHT" layoutX="970.0" mnemonicParsing="false" onAction="#handleBack" prefHeight="30.0" prefWidth="81.0" style="-fx-background-color: red;" text="Back">
+               <font>
+                  <Font name="Clarendon BT Bold" size="20.0" />
+               </font>
+            </Button>
          </children>
       </Pane>
    </top>
