@@ -1,5 +1,6 @@
 package ui;
 
+
 import domain.Player;
 
 import javafx.fxml.FXML;
@@ -7,6 +8,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
+
+import javafx.scene.layout.VBox;
 import javafx.scene.control.Slider;
 import javafx.stage.Stage;
 
@@ -39,9 +42,17 @@ public class OptionController {
 @FXML private Spinner<Integer> waveSizeSpinner;
 @FXML private Button saveButton;
 @FXML private Button discardButton;
+@FXML private VBox background;
 
 @FXML
 public void initialize() {
+	
+	background.setStyle(
+            "-fx-background-image: url('" + getClass().getResource("assets/background.png") + "');" +
+            "-fx-background-size: cover;"
+        );
+	
+	
     
     livesSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 99, savedLives));
     goldSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10000, savedGold));
