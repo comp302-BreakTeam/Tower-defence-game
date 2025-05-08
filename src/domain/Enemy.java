@@ -1,7 +1,5 @@
 package domain;
 
-import java.util.ArrayList;
-
 public abstract class Enemy {
 	protected int health = 100;
 	protected float speed;
@@ -9,12 +7,29 @@ public abstract class Enemy {
 	protected int row;
     protected int col;
     public final int maxHP=100;
-    
+    protected double xCoordinate;
+    protected double yCoordinate;
+
+    public double getxCoordinate() {
+        return xCoordinate;
+    }
+    public double getyCoordinate() {
+        return yCoordinate;
+    }
+    public void setxCoordinate(double xPos) {
+        this.xCoordinate = xPos;
+    }
+    public void setyCoordinate(double yPos) {
+        this.yCoordinate = yPos;
+    }
     public void setPosition(int row, int col) {
         this.row = row;
         this.col = col;
+        this.xCoordinate = col * 75; // tile width
+        this.yCoordinate = row * 50; // tile height
     }
-	
+
+
     public Enemy(int health, float speed, int reward) {
         this.health = health;
         this.speed = speed;

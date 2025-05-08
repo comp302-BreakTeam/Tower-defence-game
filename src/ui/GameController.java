@@ -7,6 +7,8 @@
 	import java.util.List;
 	import java.util.Map;
     import javafx.animation.AnimationTimer;
+	import javafx.animation.KeyFrame;
+	import javafx.animation.Timeline;
 	import javafx.animation.TranslateTransition;
 	import javafx.fxml.FXML;
 	import javafx.geometry.Side;
@@ -32,7 +34,9 @@
 	    private static final int COLS = 16;
 	    private static final int TILE_WIDTH = 75;
 	    private static final int TILE_HEIGHT = 50;
-	    private TileType[][] currentMap = new TileType[ROWS][COLS];
+		private Map<Enemy, Timeline> enemyAnimations = new HashMap<>();
+		private Map<Enemy, Image[]> enemyImages = new HashMap<>();
+		private TileType[][] currentMap = new TileType[ROWS][COLS];
 	    @FXML
 		private Label playerName;
 	    @FXML
@@ -165,105 +169,120 @@
 			updateHUD();
 	        startGameLoop();
 		}
-		
-		
+
+
 		private void startGameLoop() {
 			timer = new AnimationTimer() {
+
 				private long lastUpdate = 0;
 				 @Override
 		            public void handle(long now) {
 		                if (now - lastUpdate < 500_000_00) return;
 		                lastUpdate = now;
-		                
-		                if(!isPaused) {	
-		                engine.update();	
-		                renderEnemies();			            		                
+
+		                if(!isPaused) {
+		                engine.update();
+		                renderEnemies();
 		                updateHUD();
-		                
+
 		                if(gameSpeed) {
-		                	engine.update();	
-			                renderEnemies();			            		                
+		                	engine.update();
+			                renderEnemies();
 			                updateHUD();
 		                }
 		                }
-		               
-	
+
+
 		                if (engine.isGameOver()) {
 		                    timer.stop();
 		                    gameOver.setVisible(true);
 		                    mapGrid.getChildren().remove(gameOver);
 		                    mapGrid.getChildren().add(gameOver);
-		                    
-		                    
+
+
 		                }
 		            }
 		        };
 		        timer.start();
 			}
-		
+
 		private void renderEnemies() {
 			for (Enemy e : engine.getActiveEnemies()) {
 				ImageView view = enemyViews.get(e);
 				ProgressBar HP = enemyHP.get(e);
+
 				if (view == null) {
-					Image img;
-					if(e.getClass()==Knight.class) {
-						img = new Image(getClass().getResourceAsStream("assets/knight.png"));
+					Image[] frames;
+					if (e instanceof Knight) {
+						frames = new Image[]{
+								new Image(getClass().getResourceAsStream("/ui/Assets/knight_run_1.png")),
+								new Image(getClass().getResourceAsStream("/ui/Assets/knight_run_2.png")),
+								new Image(getClass().getResourceAsStream("/ui/Assets/knight_run_3.png")),
+								new Image(getClass().getResourceAsStream("/ui/Assets/knight_run_4.png")),
+								new Image(getClass().getResourceAsStream("/ui/Assets/knight_run_5.png")),
+								new Image(getClass().getResourceAsStream("/ui/Assets/knight_run_6.png"))
+						};
+					} else {
+						frames = new Image[]{
+								new Image(getClass().getResourceAsStream("/ui/Assets/goblin_run_1.png")),
+								new Image(getClass().getResourceAsStream("/ui/Assets/goblin_run_2.png")),
+								new Image(getClass().getResourceAsStream("/ui/Assets/goblin_run_3.png")),
+								new Image(getClass().getResourceAsStream("/ui/Assets/goblin_run_4.png")),
+								new Image(getClass().getResourceAsStream("/ui/Assets/goblin_run_5.png")),
+								new Image(getClass().getResourceAsStream("/ui/Assets/goblin_run_6.png"))
+						};
 					}
-					else {
-						img = new Image(getClass().getResourceAsStream("assets/goblin.png"));
-					}
-					
-					view = new ImageView(img);
-					view.setFitWidth(TILE_WIDTH * 0.7);
-					view.setFitHeight(TILE_HEIGHT * 0.7);
+
+					view = new ImageView(frames[0]);
+					view.setFitWidth(TILE_WIDTH * 1.3);
+					view.setFitHeight(TILE_HEIGHT * 1.3);
 					enemyViews.put(e, view);
+
 					HP = new ProgressBar(1);
 					HP.setPrefHeight(10);
 					HP.setPrefWidth(TILE_WIDTH * 0.7);
 					HP.setStyle("-fx-accent: red;");
 					enemyHP.put(e, HP);
-					mapGrid.getChildren().add(HP);
-					mapGrid.getChildren().add(view);
-	                view.setTranslateX(e.getCol() * TILE_WIDTH);
-	                view.setTranslateY(e.getRow() * TILE_HEIGHT);
-	                HP.setTranslateX(view.getTranslateX());
-	                HP.setTranslateY(view.getTranslateY()-30);
-	                
-					
-				}
-				else {
+
+					mapGrid.getChildren().addAll(view, HP);
+					view.setTranslateX(e.getCol() * TILE_WIDTH);
+					view.setTranslateY(e.getRow() * TILE_HEIGHT);
+					HP.setTranslateX(view.getTranslateX());
+					HP.setTranslateY(view.getTranslateY() - 30);
+
+					final ImageView finalView = view;
+					final Image[] finalFrames = frames;
+
+					Timeline animation = new Timeline(new KeyFrame(Duration.millis(100), evt -> {
+						int frameIndex = (int) ((System.currentTimeMillis() / 100) % finalFrames.length);
+						finalView.setImage(finalFrames[frameIndex]);
+					}));
+					animation.setCycleCount(Timeline.INDEFINITE);
+					animation.play();
+				} else {
 					TranslateTransition tt = new TranslateTransition(Duration.millis(250), view);
 					TranslateTransition hh = new TranslateTransition(Duration.millis(250), HP);
-					double targetx = e.getCol() * TILE_WIDTH ;
-	                double targety = e.getRow() * TILE_HEIGHT ;
-	                double movx = targetx - view.getTranslateX();
-	                double movy = targety - view.getTranslateY();
-	                if (movy>0) {
-						movy-=30;
+					double targetx = e.getCol() * TILE_WIDTH;
+					double targety = e.getRow() * TILE_HEIGHT;
+					double movx = targetx - view.getTranslateX();
+					double movy = targety - view.getTranslateY();
+					if (movy > 0) {
+						movy -= 30;
+					} else if (movy < 0) {
+						movy -= 10;
 					}
-	                else if(movy<0) {
-						movy-=10;
-					}
-	                tt.setByX(movx);
-	                hh.setByX(movx);
-	                tt.setByY(movy);
-	                hh.setByY(movy);
-	                tt.play();
-	                hh.play();
-	                HP.setProgress(e.getHealth()/e.maxHP);
-				}
-			}
-			
-			for (Enemy e : enemyViews.keySet()) {
-				if (!engine.getActiveEnemies().contains(e)) {
-					mapGrid.getChildren().remove(enemyViews.get(e));
-					mapGrid.getChildren().remove(enemyHP.get(e));
-					
+					tt.setByX(movx);
+					hh.setByX(movx);
+					tt.setByY(movy);
+					hh.setByY(movy);
+					tt.play();
+					hh.play();
+					HP.setProgress(e.getHealth() / e.maxHP);
 				}
 			}
 		}
-		
+
+
 		private void updateHUD() {
 	        numHealth.setText("" + player.getLives());
 	        numCoin.setText("" + player.getGold());
