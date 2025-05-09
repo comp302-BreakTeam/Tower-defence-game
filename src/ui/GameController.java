@@ -195,18 +195,21 @@
 												currentMap[r][c] == TileType.MAGE_TOWER ||
 												currentMap[r][c] == TileType.ARTILLERY_TOWER) {
 
-											towerTile tile = (towerTile) map.getTile(r, c);
-											Tower tower = tile.getTower();
+											Tile tileObj = map.getTile(r, c);
+											if (tileObj instanceof towerTile) {
+												towerTile tile = (towerTile) tileObj;
+												Tower tower = tile.getTower();
 
-											double dx = tower.getCol() - target.getCol();
-											double dy = tower.getRow() - target.getRow();
-											double dist = Math.sqrt(dx * dx + dy * dy);
+												double dx = tower.getCol() - target.getCol();
+												double dy = tower.getRow() - target.getRow();
+												double dist = Math.sqrt(dx * dx + dy * dy);
 
-											if (dist <= 5) {
-												Long lastFire = towerLastFireTimes.getOrDefault(tower, 0L);
-												if (now2 - lastFire >= FIRE_COOLDOWN_NS) {
-													fireFromTower(tower, target);
-													towerLastFireTimes.put(tower, now2);
+												if (dist <= 5) {
+													Long lastFire = towerLastFireTimes.getOrDefault(tower, 0L);
+													if (now2 - lastFire >= FIRE_COOLDOWN_NS) {
+														fireFromTower(tower, target);
+														towerLastFireTimes.put(tower, now2);
+													}
 												}
 											}
 										}
