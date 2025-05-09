@@ -44,6 +44,10 @@ public class ProjectileController extends ImageView {
         double dy = target.getyCoordinate() - getTranslateY();
         double dist = Math.sqrt(dx * dx + dy * dy);
 
+        //Rotating the fireball accordingly
+        double angle = Math.toDegrees(Math.atan2(dy, dx));
+        this.setRotate(angle);
+
         if (dist < 10) {
             if (Math.random() > 0.1) {
                 target.takeDamage(projectile.getDamage());
