@@ -34,8 +34,9 @@
 	    private static final int COLS = 16;
 	    private static final int TILE_WIDTH = 75;
 	    private static final int TILE_HEIGHT = 50;
-		private Map<Enemy, Timeline> enemyAnimations = new HashMap<>();
-		private Map<Enemy, Image[]> enemyImages = new HashMap<>();
+		private List<ProjectileController> activeProjectiles = new ArrayList<>();
+		private Map<Tower, Long> towerLastFireTimes = new HashMap<>();
+		private static final long FIRE_COOLDOWN_NS = 800_000_000; // 800ms in nanoseconds
 		private TileType[][] currentMap = new TileType[ROWS][COLS];
 	    @FXML
 		private Label playerName;
@@ -182,7 +183,39 @@
 
 		                if(!isPaused) {
 		                engine.update();
-		                renderEnemies();
+							// TEMP: Find first tower and first enemy, fire once for testing
+							long now2 = System.nanoTime(); // at top of handle()
+
+							if (!engine.getActiveEnemies().isEmpty()) {
+								Enemy target = engine.getActiveEnemies().get(0);
+
+								for (int r = 0; r < ROWS; r++) {
+									for (int c = 0; c < COLS; c++) {
+										if (currentMap[r][c] == TileType.ARCHER_TOWER ||
+												currentMap[r][c] == TileType.MAGE_TOWER ||
+												currentMap[r][c] == TileType.ARTILLERY_TOWER) {
+
+											towerTile tile = (towerTile) map.getTile(r, c);
+											Tower tower = tile.getTower();
+
+											double dx = tower.getCol() - target.getCol();
+											double dy = tower.getRow() - target.getRow();
+											double dist = Math.sqrt(dx * dx + dy * dy);
+
+											if (dist <= 5) {
+												Long lastFire = towerLastFireTimes.getOrDefault(tower, 0L);
+												if (now2 - lastFire >= FIRE_COOLDOWN_NS) {
+													fireFromTower(tower, target);
+													towerLastFireTimes.put(tower, now2);
+												}
+											}
+										}
+									}
+								}
+							}
+
+
+							renderEnemies();
 		                updateHUD();
 
 		                if(gameSpeed) {
@@ -190,7 +223,16 @@
 			                renderEnemies();
 			                updateHUD();
 		                }
-		                }
+							List<ProjectileController> toRemove = new ArrayList<>();
+							for (ProjectileController proj : activeProjectiles) {
+								if (proj.update()) {
+									toRemove.add(proj);
+									mapGrid.getChildren().remove(proj);
+								}
+							}
+							activeProjectiles.removeAll(toRemove);
+
+						}
 
 
 		                if (engine.isGameOver()) {
@@ -280,6 +322,20 @@
 					HP.setProgress(e.getHealth() / e.maxHP);
 				}
 			}
+		}
+		private void fireFromTower(Tower tower, Enemy target) {
+			Projectile p = new Projectile(tower, target, 20); // adjust damage as needed
+			Image[] fireFrames = new Image[] {
+					new Image(getClass().getResourceAsStream("/ui/Assets/fireball_1.png")),
+					new Image(getClass().getResourceAsStream("/ui/Assets/fireball_2.png")),
+					new Image(getClass().getResourceAsStream("/ui/Assets/fireball_3.png")),
+					new Image(getClass().getResourceAsStream("/ui/Assets/fireball_4.png")),
+					new Image(getClass().getResourceAsStream("/ui/Assets/fireball_5.png")),
+					new Image(getClass().getResourceAsStream("/ui/Assets/fireball_6.png"))
+			};
+			ProjectileController controller = new ProjectileController(p, fireFrames);
+			activeProjectiles.add(controller);
+			mapGrid.getChildren().add(controller);
 		}
 
 
@@ -399,6 +455,9 @@
 	    		       twrTile.setTower(tower);
 		    		       currentMap[r][c]=TileType.ARCHER_TOWER;
 		    		       tile.setOnAction(e -> towerTileAction(r, c, tile));
+					tower.setRow(r);
+					tower.setCol(c);
+
 				}
 		       
 		    });
@@ -411,6 +470,9 @@
     				twrTile.setTower(tower);
     				currentMap[r][c]=TileType.MAGE_TOWER;
     				tile.setOnAction(e -> towerTileAction(r, c, tile));
+					tower.setRow(r);
+					tower.setCol(c);
+
 				}
 				
 		    });
@@ -423,12 +485,15 @@
     				twrTile.setTower(tower);
     				currentMap[r][c]=TileType.ARTILLERY_TOWER;
     				tile.setOnAction(e -> towerTileAction(r, c, tile));
+					tower.setRow(r);
+					tower.setCol(c);
+
 				}
 				
 		    });
 			
 			menu.getItems().addAll(archer, mage, artillery);
 			menu.show(tile, Side.RIGHT, 0, 0);
-			
+
 		}
 		}

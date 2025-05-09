@@ -8,14 +8,33 @@ public abstract class Tower {
     protected int range;
     protected float fireRate;
     protected int cost;
-    
-    public Tower(int damage, float fireRate, int cost) {
+	private int row;
+	private int col;
+
+	public Tower(int damage, float fireRate, int cost) {
     	this.level = 1;
     	this.damage = damage;
     	this.fireRate = fireRate;
     	this.cost = cost;
     }
-    public int getLevel() {
+
+	public int getRow() {
+		return row;
+	}
+
+	public int getCol() {
+		return col;
+	}
+
+	public void setRow(int row) {
+		this.row = row;
+	}
+
+	public void setCol(int col) {
+		this.col = col;
+	}
+
+	public int getLevel() {
 		return level;
 	}
 
