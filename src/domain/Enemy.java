@@ -55,6 +55,12 @@ public abstract class Enemy {
 
 	
 
+	public void setRow(int row) {
+		this.row = row;
+	}
+	public void setCol(int col) {
+		this.col = col;
+	}
 	public int getHealth() {
 		return health;
 	}

@@ -1,7 +1,11 @@
 package ui;
 
 import domain.Projectile;
+
+import java.util.Random;
+
 import domain.Enemy;
+import domain.Mage_Tower;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.animation.KeyFrame;
@@ -19,8 +23,18 @@ public class ProjectileController extends ImageView {
     private final Image[] explosionFrames;
     private int currentExplosionFrame = 0;
     private boolean removable = false;
+    private int startrow;
+    private int startcol;
 
-    public ProjectileController(Projectile projectile, Image[] fireFrames) {
+    public void setStartrow(int startrow) {
+		this.startrow = startrow;
+	}
+
+	public void setStartcol(int startcol) {
+		this.startcol = startcol;
+	}
+
+	public ProjectileController(Projectile projectile, Image[] fireFrames) {
         super(fireFrames[0]);
         this.projectile = projectile;
         this.target = projectile.getTarget();
@@ -56,7 +70,11 @@ public class ProjectileController extends ImageView {
 
     // New update method with deltaTime
     public void update(double deltaTime) {
-        if (hasHit || target == null || target.isDead()) return;
+        if (hasHit || target == null || target.isDead()) {
+        	removable = true;
+        	return;
+        }
+        	
 
         double dx = target.getxCoordinate() - getTranslateX();
         double dy = target.getyCoordinate() - getTranslateY();
@@ -71,6 +89,16 @@ public class ProjectileController extends ImageView {
             }
             hasHit = true;
             showImpact();
+            if (projectile.getSource() instanceof Mage_Tower) {
+            	Random random = new Random();
+            	int percent = random.nextInt(100);
+            	if (percent<70) {
+					target.setCol(startcol);
+					target.setRow(startrow);
+				}
+				
+			}
+            removable = true;
             return;
         }
 
@@ -89,12 +117,13 @@ public class ProjectileController extends ImageView {
                 this.setImage(explosionFrames[currentExplosionFrame]);
                 currentExplosionFrame++;
             } else {
-                removable = true;
+                
                 impactTimeline.stop();
             }
         }));
         impactTimeline.setCycleCount(Timeline.INDEFINITE);
         impactTimeline.play();
+        
     }
 
     // Call this to check if the projectile is ready to be removed
