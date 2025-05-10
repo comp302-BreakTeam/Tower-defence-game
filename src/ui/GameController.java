@@ -69,6 +69,8 @@
 	    private Map<Enemy, ProgressBar> enemyHP = new HashMap<>();
 	    private int defaultHealth;
 	    private int defaultCoins;
+	    private int startrow;
+	    private int startcol;
 	    
 	    public void setPreviousScene(Scene scene) {
 	        this.previousScene = scene;
@@ -277,6 +279,8 @@
 				ProgressBar HP = enemyHP.get(e);
 
 				if (view == null) {
+					startcol=e.getCol() ;
+					startrow=e.getRow() ;
 					Image[] frames;
 					if (e instanceof Knight) {
 						frames = new Image[]{
@@ -344,10 +348,18 @@
 					hh.play();
 					HP.setProgress((double)e.getHealth() / e.maxHP);
 				}
+				
+			}
+			for (Enemy e : enemyViews.keySet()) {
+				if (!engine.getActiveEnemies().contains(e)) {
+					mapGrid.getChildren().remove(enemyViews.get(e));
+					mapGrid.getChildren().remove(enemyHP.get(e));
+					
+				}
 			}
 		}
 		private void fireFromTower(Tower tower, Enemy target) {
-			Projectile p = new Projectile(tower, target, 10); // adjust damage as needed
+			Projectile p = new Projectile(tower, target, tower.getDamage()); // adjust damage as needed
 			Image[] fireFrames = new Image[] {
 					new Image(getClass().getResourceAsStream("/ui/Assets/fireball_1.png")),
 					new Image(getClass().getResourceAsStream("/ui/Assets/fireball_2.png")),
@@ -357,6 +369,8 @@
 					new Image(getClass().getResourceAsStream("/ui/Assets/fireball_6.png"))
 			};
 			ProjectileController controller = new ProjectileController(p, fireFrames);
+			controller.setStartcol(startcol);
+			controller.setStartrow(startrow);
 			activeProjectiles.add(controller);
 			mapGrid.getChildren().add(controller);
 		}
