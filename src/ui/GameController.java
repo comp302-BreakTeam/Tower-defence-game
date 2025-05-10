@@ -172,84 +172,104 @@
 		}
 
 
+		// ... existing code ...
+		private long lastUpdateTime = System.nanoTime();
+		// ... existing code ...
 		private void startGameLoop() {
 			timer = new AnimationTimer() {
 
 				private long lastUpdate = 0;
-				 @Override
-		            public void handle(long now) {
-		                if (now - lastUpdate < 500_000_00) return;
-		                lastUpdate = now;
+				@Override
+				public void handle(long now) {
+					if (now - lastUpdate < 500_000_00) return;
+					lastUpdate = now;
 
-		                if(!isPaused) {
-		                engine.update();
-							// TEMP: Find first tower and first enemy, fire once for testing
-							long now2 = System.nanoTime(); // at top of handle()
+					double deltaTime = (now - lastUpdateTime) / 1_000_000_000.0;
+					lastUpdateTime = now;
 
-							if (!engine.getActiveEnemies().isEmpty()) {
-								Enemy target = engine.getActiveEnemies().get(0);
+					if(!isPaused) {
+						engine.update();
+						// TEMP: Find first tower and first enemy, fire once for testing
+						long now2 = System.nanoTime(); // at top of handle()
 
-								for (int r = 0; r < ROWS; r++) {
-									for (int c = 0; c < COLS; c++) {
-										if (currentMap[r][c] == TileType.ARCHER_TOWER ||
-												currentMap[r][c] == TileType.MAGE_TOWER ||
-												currentMap[r][c] == TileType.ARTILLERY_TOWER) {
+						if (!engine.getActiveEnemies().isEmpty()) {
 
-											Tile tileObj = map.getTile(r, c);
-											if (tileObj instanceof towerTile) {
-												towerTile tile = (towerTile) tileObj;
-												Tower tower = tile.getTower();
+							for (int r = 0; r < ROWS; r++) {
+								for (int c = 0; c < COLS; c++) {
+									if (currentMap[r][c] == TileType.ARCHER_TOWER ||
+											currentMap[r][c] == TileType.MAGE_TOWER ||
+											currentMap[r][c] == TileType.ARTILLERY_TOWER) {
 
-												double dx = tower.getCol() - target.getCol();
-												double dy = tower.getRow() - target.getRow();
+										Tile tileObj = map.getTile(r, c);
+										if (tileObj instanceof towerTile) {
+											towerTile tile = (towerTile) tileObj;
+											Tower tower = tile.getTower();
+											Enemy target = null;
+											double minDist = Double.MAX_VALUE;
+											for (Enemy enemy : engine.getActiveEnemies()) {
+												double dx = tower.getCol() - enemy.getCol();
+												double dy = tower.getRow() - enemy.getRow();
 												double dist = Math.sqrt(dx * dx + dy * dy);
+												if (dist <= 5 && dist < minDist) {
+													minDist = dist;
+													target = enemy;
+												}
+											}
 
-												if (dist <= 5) {
-													Long lastFire = towerLastFireTimes.getOrDefault(tower, 0L);
-													if (now2 - lastFire >= FIRE_COOLDOWN_NS) {
-														fireFromTower(tower, target);
-														towerLastFireTimes.put(tower, now2);
-													}
+											if (target != null) {
+												Long lastFire = towerLastFireTimes.getOrDefault(tower, 0L);
+												if (now2 - lastFire >= FIRE_COOLDOWN_NS) {
+													fireFromTower(tower, target);
+													towerLastFireTimes.put(tower, now2);
 												}
 											}
 										}
 									}
 								}
 							}
-
-
-							renderEnemies();
-		                updateHUD();
-
-		                if(gameSpeed) {
-		                	engine.update();
-			                renderEnemies();
-			                updateHUD();
-		                }
-							List<ProjectileController> toRemove = new ArrayList<>();
-							for (ProjectileController proj : activeProjectiles) {
-								if (proj.update()) {
-									toRemove.add(proj);
-									mapGrid.getChildren().remove(proj);
-								}
-							}
-							activeProjectiles.removeAll(toRemove);
-
 						}
 
+						renderEnemies();
+						updateHUD();
 
-		                if (engine.isGameOver()) {
-		                    timer.stop();
-		                    gameOver.setVisible(true);
-		                    mapGrid.getChildren().remove(gameOver);
-		                    mapGrid.getChildren().add(gameOver);
+						if(gameSpeed) {
+							engine.update();
+							renderEnemies();
+							updateHUD();
+						}
+						List<ProjectileController> toRemove = new ArrayList<>();
+						for (ProjectileController proj : activeProjectiles) {
+							proj.update(deltaTime); // pass deltaTime
+							if (proj.isRemovable()) {
+								toRemove.add(proj);
+								mapGrid.getChildren().remove(proj);
+							}
+						}
+						activeProjectiles.removeAll(toRemove);
+						List<Enemy> toRemoveEnemies = new ArrayList<>();
+						for (Enemy e : engine.getActiveEnemies()) {
+							if (e.isDead()) {
+								toRemoveEnemies.add(e);
+								ImageView view = enemyViews.remove(e);
+								ProgressBar hp = enemyHP.remove(e);
+								if (view != null) mapGrid.getChildren().remove(view);
+								if (hp != null) mapGrid.getChildren().remove(hp);
+							}
+						}
+						engine.getActiveEnemies().removeAll(toRemoveEnemies);
 
+					}
 
-		                }
-		            }
-		        };
-		        timer.start();
-			}
+					if (engine.isGameOver()) {
+						timer.stop();
+						gameOver.setVisible(true);
+						mapGrid.getChildren().remove(gameOver);
+						mapGrid.getChildren().add(gameOver);
+					}
+				}
+			};
+			timer.start();
+		}
 
 		private void renderEnemies() {
 			for (Enemy e : engine.getActiveEnemies()) {
@@ -322,12 +342,12 @@
 					hh.setByY(movy);
 					tt.play();
 					hh.play();
-					HP.setProgress(e.getHealth() / e.maxHP);
+					HP.setProgress((double)e.getHealth() / e.maxHP);
 				}
 			}
 		}
 		private void fireFromTower(Tower tower, Enemy target) {
-			Projectile p = new Projectile(tower, target, 20); // adjust damage as needed
+			Projectile p = new Projectile(tower, target, 10); // adjust damage as needed
 			Image[] fireFrames = new Image[] {
 					new Image(getClass().getResourceAsStream("/ui/Assets/fireball_1.png")),
 					new Image(getClass().getResourceAsStream("/ui/Assets/fireball_2.png")),

@@ -13,12 +13,29 @@ public class ProjectileController extends ImageView {
     private final Enemy target;
     private boolean hasHit = false;
     private final Image[] frames;
+    private final double speed = 300; // pixels per second
+    private Timeline animation;
+    private Timeline impactTimeline;
+    private final Image[] explosionFrames;
+    private int currentExplosionFrame = 0;
+    private boolean removable = false;
 
     public ProjectileController(Projectile projectile, Image[] fireFrames) {
-        super(fireFrames[0]); // Start with first frame
+        super(fireFrames[0]);
         this.projectile = projectile;
         this.target = projectile.getTarget();
         this.frames = fireFrames;
+        this.explosionFrames = new Image[] {
+                new Image(getClass().getResourceAsStream("/ui/Assets/explosion_1.png")),
+                new Image(getClass().getResourceAsStream("/ui/Assets/explosion_2.png")),
+                new Image(getClass().getResourceAsStream("/ui/Assets/explosion_3.png")),
+                new Image(getClass().getResourceAsStream("/ui/Assets/explosion_4.png")),
+                new Image(getClass().getResourceAsStream("/ui/Assets/explosion_5.png")),
+                new Image(getClass().getResourceAsStream("/ui/Assets/explosion_6.png")),
+                new Image(getClass().getResourceAsStream("/ui/Assets/explosion_7.png")),
+                new Image(getClass().getResourceAsStream("/ui/Assets/explosion_8.png")),
+                new Image(getClass().getResourceAsStream("/ui/Assets/explosion_9.png"))
+        };
 
         this.setFitWidth(30);
         this.setFitHeight(30);
@@ -29,22 +46,22 @@ public class ProjectileController extends ImageView {
     }
 
     private void startAnimation() {
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(80), e -> {
+        animation = new Timeline(new KeyFrame(Duration.millis(80), e -> {
             int frameIndex = (int)((System.currentTimeMillis() / 80) % frames.length);
             this.setImage(frames[frameIndex]);
         }));
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();
+        animation.setCycleCount(Timeline.INDEFINITE);
+        animation.play();
     }
 
-    public boolean update() {
-        if (hasHit || target == null || target.isDead()) return true;
+    // New update method with deltaTime
+    public void update(double deltaTime) {
+        if (hasHit || target == null || target.isDead()) return;
 
         double dx = target.getxCoordinate() - getTranslateX();
         double dy = target.getyCoordinate() - getTranslateY();
         double dist = Math.sqrt(dx * dx + dy * dy);
 
-        //Rotating the fireball accordingly
         double angle = Math.toDegrees(Math.atan2(dy, dx));
         this.setRotate(angle);
 
@@ -53,13 +70,35 @@ public class ProjectileController extends ImageView {
                 target.takeDamage(projectile.getDamage());
             }
             hasHit = true;
-            return true;
+            showImpact();
+            return;
         }
 
-        double speed = 10;
-        setTranslateX(getTranslateX() + (dx / dist) * speed);
-        setTranslateY(getTranslateY() + (dy / dist) * speed);
+        double moveDist = Math.min(dist, speed * deltaTime);
+        setTranslateX(getTranslateX() + (dx / dist) * moveDist);
+        setTranslateY(getTranslateY() + (dy / dist) * moveDist);
+    }
 
-        return false;
+    private void showImpact() {
+        if (animation != null) animation.stop();
+        currentExplosionFrame = 0;
+        this.setFitWidth(50);
+        this.setFitHeight(50);
+        impactTimeline = new Timeline(new KeyFrame(Duration.millis(100), e -> {
+            if (currentExplosionFrame < explosionFrames.length) {
+                this.setImage(explosionFrames[currentExplosionFrame]);
+                currentExplosionFrame++;
+            } else {
+                removable = true;
+                impactTimeline.stop();
+            }
+        }));
+        impactTimeline.setCycleCount(Timeline.INDEFINITE);
+        impactTimeline.play();
+    }
+
+    // Call this to check if the projectile is ready to be removed
+    public boolean isRemovable() {
+        return removable;
     }
 }
