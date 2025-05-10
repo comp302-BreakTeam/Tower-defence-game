@@ -2,9 +2,14 @@ package ui;
 
 import domain.Projectile;
 
+import java.util.List;
 import java.util.Random;
 
+import domain.Archer_Tower;
+import domain.Artillery_Tower;
 import domain.Enemy;
+import domain.Goblin;
+import domain.Knight;
 import domain.Mage_Tower;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -25,8 +30,14 @@ public class ProjectileController extends ImageView {
     private boolean removable = false;
     private int startrow;
     private int startcol;
+    private List<Enemy> activeEnemies;
+    private final double AOE_RADIUS = 100;
 
-    public void setStartrow(int startrow) {
+    public void setActiveEnemies(List<Enemy> activeEnemies) {
+		this.activeEnemies = activeEnemies;
+	}
+
+	public void setStartrow(int startrow) {
 		this.startrow = startrow;
 	}
 
@@ -85,14 +96,27 @@ public class ProjectileController extends ImageView {
 
         if (dist < 10) {
             if (Math.random() > 0.1) {
-                target.takeDamage(projectile.getDamage());
+            	if (projectile.getSource() instanceof Mage_Tower && target instanceof Knight) {
+            		target.takeDamage(projectile.getDamage()*1.5);
+            	}
+            	else if (projectile.getSource() instanceof Archer_Tower && target instanceof Goblin) {
+            		target.takeDamage(projectile.getDamage()*1.5);
+				}
+            	else {
+            		target.takeDamage(projectile.getDamage());
+				}
+            	if (projectile.getSource() instanceof Artillery_Tower) {
+            		applyAoeDamage();
+
+            	}
+                
             }
             hasHit = true;
             showImpact();
             if (projectile.getSource() instanceof Mage_Tower) {
             	Random random = new Random();
             	int percent = random.nextInt(100);
-            	if (percent<70) {
+            	if (percent<3) {
 					target.setCol(startcol);
 					target.setRow(startrow);
 				}
@@ -129,5 +153,16 @@ public class ProjectileController extends ImageView {
     // Call this to check if the projectile is ready to be removed
     public boolean isRemovable() {
         return removable;
+    }
+    private void applyAoeDamage() {
+    	for(Enemy e:activeEnemies) {
+    		if(e==target) continue;
+    		double dx = e.getxCoordinate() - target.getxCoordinate();
+            double dy = e.getyCoordinate() - target.getyCoordinate();
+            double distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance <= AOE_RADIUS) {
+            	e.takeDamage(projectile.getDamage());
+            }
+    	}
     }
 }

@@ -10,6 +10,8 @@ public class GameEngine {
 	private Wave currentWave;
 	private List<int[]> path;
 	private List<Enemy> activeEnemies;
+	
+
 	private int tickCounter = 0;
     private int spawnRate = 30;
     private int waveSize = 10;
@@ -99,6 +101,9 @@ public class GameEngine {
         currentWave = new Wave(waveSize + waveNumber);
         waitingForNextWave = false;
     }
+    public int getMaxWaves() {
+		return maxWaves;
+	}
 
     public List<Enemy> getActiveEnemies() {
         return activeEnemies;

@@ -51,7 +51,7 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <ImageView fx:id="gameOver" fitHeight="300.0" fitWidth="626.0" visible="false" GridPane.columnIndex="3" GridPane.rowIndex="6">
+            <ImageView fx:id="gameOver" fitHeight="300.0" fitWidth="626.0" visible="false" GridPane.columnIndex="3" GridPane.rowIndex="7">
                <image>
                   <Image url="@Assets/gameover.png" />
                </image>
@@ -93,6 +93,11 @@
                </font>
             </Button>
             <Button fx:id="toggle" layoutX="855.0" layoutY="12.0" mnemonicParsing="false" onAction="#toggleSpeed" style="-fx-background-color: red;" text="NORMAL">
+               <font>
+                  <Font name="Clarendon BT Bold" size="20.0" />
+               </font>
+            </Button>
+            <Button fx:id="fireball" layoutX="650.0" layoutY="10.0" mnemonicParsing="false" onAction="#fireballMode" prefHeight="42.0" prefWidth="185.0" style="-fx-background-color: red;" text="FIREBALL">
                <font>
                   <Font name="Clarendon BT Bold" size="20.0" />
                </font>

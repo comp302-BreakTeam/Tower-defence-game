@@ -60,6 +60,9 @@
 	    private Button pause;
 	    @FXML
 	    private Button toggle;
+	    @FXML
+	    private Button fireball;
+	    
 	    private GameEngine engine;
 	    private List<int[]> path;
 	    private AnimationTimer timer;
@@ -71,6 +74,9 @@
 	    private int defaultCoins;
 	    private int startrow;
 	    private int startcol;
+	    private double speedMultiplier = 1.0;
+	    private boolean fireballMode = false;
+	    private boolean fireballOnCooldown = false;
 	    
 	    public void setPreviousScene(Scene scene) {
 	        this.previousScene = scene;
@@ -151,11 +157,20 @@
 				for (int col = 0; col < COLS; col++) {
 					currentMap[row][col] = map.getTile(row, col).getType();
 					Button tile = new Button();
+					final int r = row;
+    				final int c = col;
+					tile.setOnMouseClicked(e -> {
+					    if (fireballMode) {
+					        
+					        dropFireballAt(r, c);
+					        fireballMode = false;
+					        
+					    }
+					});
 	    			tile.setPrefSize(TILE_WIDTH, TILE_HEIGHT);
 	    			setTileBackground(tile, currentMap[row][col] );
 	    			if(currentMap[row][col]==TileType.EMPTY_PLOT) {
-	    				final int r = row;
-	    				final int c = col;
+	    				
 		    			tile.setOnAction(e -> {
 		    			emptyPlotAction(r, c, tile); 
 		    			
@@ -171,6 +186,79 @@
 			engine = new GameEngine(path, player.getWaveSize(), player.getMaxWave(),player);
 			updateHUD();
 	        startGameLoop();
+		}
+
+
+		private void dropFireballAt(int row, int col) {
+			Image fireballImage = new Image(getClass().getResourceAsStream("/ui/Assets/fireball_1.png"));
+		    ImageView fireball = new ImageView(fireballImage);
+		    fireball.setFitWidth(100);
+		    fireball.setFitHeight(100);
+
+		    double targetX = col * TILE_WIDTH;
+		    double targetY = row * TILE_HEIGHT;
+		    fireball.setTranslateX(targetX);
+		    fireball.setTranslateY(-100); 
+		    mapGrid.getChildren().add(fireball);
+		    TranslateTransition fall = new TranslateTransition(Duration.seconds(0.6), fireball);
+		    fall.setToY(targetY);
+		    fall.setOnFinished(e -> {
+		        mapGrid.getChildren().remove(fireball);
+		        playExplosion(targetX, targetY);
+		        
+		    });
+		    fall.play();
+		    fireballOnCooldown = true;
+		    this.fireball.setText("COOLDOWN");
+		    Timeline cooldownTimer = new Timeline(new KeyFrame(Duration.seconds(10*speedMultiplier), e -> {
+		        
+		    	fireballOnCooldown = false;
+		    	this.fireball.setText("FIREBALL");
+		    }));
+		    cooldownTimer.play();
+		    
+		    
+			
+		}
+		private void playExplosion(double x, double y) {
+		    ImageView explosion = new ImageView();
+		    explosion.setFitWidth(200);
+		    explosion.setFitHeight(200);
+		    explosion.setTranslateX(x - 25);
+		    explosion.setTranslateY(y - 25);
+
+		    Image[] explosionFrames = new Image[] {
+		        new Image(getClass().getResourceAsStream("/ui/Assets/explosion_1.png")),
+		        new Image(getClass().getResourceAsStream("/ui/Assets/explosion_2.png")),
+		        new Image(getClass().getResourceAsStream("/ui/Assets/explosion_3.png")),
+		        new Image(getClass().getResourceAsStream("/ui/Assets/explosion_4.png")),
+		        new Image(getClass().getResourceAsStream("/ui/Assets/explosion_5.png")),
+		        new Image(getClass().getResourceAsStream("/ui/Assets/explosion_6.png")),
+		        new Image(getClass().getResourceAsStream("/ui/Assets/explosion_7.png")),
+		        new Image(getClass().getResourceAsStream("/ui/Assets/explosion_8.png")),
+		        new Image(getClass().getResourceAsStream("/ui/Assets/explosion_9.png"))
+		    };
+
+		    mapGrid.getChildren().add(explosion);
+
+		    Timeline animation = new Timeline();
+		    for (int i = 0; i < explosionFrames.length; i++) {
+		        final int frame = i;
+		        animation.getKeyFrames().add(new KeyFrame(Duration.millis(i * 100), e -> {
+		            explosion.setImage(explosionFrames[frame]);
+		        }));
+		    }
+		    animation.setOnFinished(e -> mapGrid.getChildren().remove(explosion));
+		    animation.play();
+		    double aoeRadius = 100;
+		    for (Enemy enemy : engine.getActiveEnemies()) {
+		        double dx = enemy.getxCoordinate() - x;
+		        double dy = enemy.getyCoordinate() - y;
+		        double dist = Math.sqrt(dx * dx + dy * dy);
+		        if (dist <= aoeRadius) {
+		            enemy.takeDamage(100); 
+		        }
+		    }
 		}
 
 
@@ -220,7 +308,8 @@
 
 											if (target != null) {
 												Long lastFire = towerLastFireTimes.getOrDefault(tower, 0L);
-												if (now2 - lastFire >= FIRE_COOLDOWN_NS) {
+												long cooldown = (long)((1_000_000_000 / tower.getFireRate())*3.5*speedMultiplier);
+												if (now2 - lastFire >=cooldown) {
 													fireFromTower(tower, target);
 													towerLastFireTimes.put(tower, now2);
 												}
@@ -252,7 +341,8 @@
 						for (Enemy e : engine.getActiveEnemies()) {
 							if (e.isDead()) {
 								toRemoveEnemies.add(e);
-								ImageView view = enemyViews.remove(e);
+								player.addGold(e.getReward());
+								ImageView view = enemyViews.remove(e); 
 								ProgressBar hp = enemyHP.remove(e);
 								if (view != null) mapGrid.getChildren().remove(view);
 								if (hp != null) mapGrid.getChildren().remove(hp);
@@ -359,7 +449,7 @@
 			}
 		}
 		private void fireFromTower(Tower tower, Enemy target) {
-			Projectile p = new Projectile(tower, target, tower.getDamage()); // adjust damage as needed
+			Projectile p = new Projectile(tower, target, tower.getDamage()); 
 			Image[] fireFrames = new Image[] {
 					new Image(getClass().getResourceAsStream("/ui/Assets/fireball_1.png")),
 					new Image(getClass().getResourceAsStream("/ui/Assets/fireball_2.png")),
@@ -371,6 +461,7 @@
 			ProjectileController controller = new ProjectileController(p, fireFrames);
 			controller.setStartcol(startcol);
 			controller.setStartrow(startrow);
+			controller.setActiveEnemies(engine.getActiveEnemies());
 			activeProjectiles.add(controller);
 			mapGrid.getChildren().add(controller);
 		}
@@ -379,7 +470,7 @@
 		private void updateHUD() {
 	        numHealth.setText("" + player.getLives());
 	        numCoin.setText("" + player.getGold());
-	        numWave.setText("" + engine.getWaveNumber());
+	        numWave.setText(engine.getWaveNumber()+"/"+engine.getMaxWaves());
 	    }
 		@FXML
 		private void handleBack() {
@@ -446,11 +537,21 @@
 			
 			gameSpeed=!gameSpeed;
 			if(gameSpeed) {
+				speedMultiplier = 0.5; 
 				toggle.setText("FAST");
 			}
 			else {
+				speedMultiplier = 1; 
 				toggle.setText("NORMAL");
 			}
+		}
+		@FXML
+		private void fireballMode() {
+			if (fireballOnCooldown) {
+				return;
+			}
+		    fireballMode = true;
+		    fireball.setText("ACTIVE");
 		}
 		private void towerTileAction(int r,int c,Button tile) {
 			ContextMenu menu = new ContextMenu();

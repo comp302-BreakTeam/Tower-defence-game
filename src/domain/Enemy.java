@@ -44,8 +44,8 @@ public abstract class Enemy {
     public int getReward() {
     	return reward;
     }
-    public void takeDamage(int damage) {
-        health -= damage;
+    public void takeDamage(double d) {
+        health -= d;
     }
     public boolean isDead() {
         return health <= 0;
