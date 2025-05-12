@@ -312,6 +312,15 @@
 					HP.setPrefWidth(TILE_WIDTH * 0.7);
 					HP.setStyle("-fx-accent: red;");
 					enemyHP.put(e, HP);
+					if (e instanceof Knight) {
+						ImageView thunderIcon = new ImageView(new Image(getClass().getResourceAsStream("/ui/Assets/thunder icon.png")));
+						thunderIcon.setFitWidth(20);
+						thunderIcon.setFitHeight(20);
+						thunderIcon.setTranslateX(e.getCol() * TILE_WIDTH + TILE_WIDTH * 0.7);
+						thunderIcon.setTranslateY(e.getRow() * TILE_HEIGHT - 30);
+						thunderIcon.setVisible(e.hasCombatSynergy);
+						mapGrid.getChildren().add(thunderIcon);
+					}
 
 					mapGrid.getChildren().addAll(view, HP);
 					view.setTranslateX(e.getCol() * TILE_WIDTH);
@@ -347,6 +356,19 @@
 					tt.play();
 					hh.play();
 					HP.setProgress((double)e.getHealth() / e.maxHP);
+					if (e instanceof Knight) {
+						for (javafx.scene.Node node : mapGrid.getChildren()) {
+							if (node instanceof ImageView && node != view) {
+								ImageView thunderIcon = (ImageView) node;
+								if (thunderIcon.getFitWidth() == 20 && thunderIcon.getFitHeight() == 20) {
+									thunderIcon.setVisible(e.hasCombatSynergy);
+									thunderIcon.setTranslateX(targetx + TILE_WIDTH * 0.7);
+									thunderIcon.setTranslateY(targety - 30);
+									break;
+								}
+							}
+						}
+					}
 				}
 				
 			}

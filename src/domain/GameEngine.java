@@ -51,6 +51,7 @@ public class GameEngine {
         }
     	List<Enemy> toRemove = new ArrayList<>();
     	 for (Enemy e : activeEnemies) {
+             e.updateCombatSynergy(activeEnemies, 75.0); // 75.0 is the tile width
     		 float cooldown = moveCooldown.get(e);
     		 cooldown += e.getSpeed() / 20f;
     		 if (cooldown < 1f) {
