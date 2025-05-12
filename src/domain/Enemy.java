@@ -1,5 +1,7 @@
 package domain;
 
+import java.util.List;
+
 public abstract class Enemy {
 	protected int health = 100;
 	protected float speed;
@@ -50,9 +52,48 @@ public abstract class Enemy {
     public boolean isDead() {
         return health <= 0;
     }
-	
-	
 
+    public float getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(float speed) {
+        this.speed = speed;
+    }
+
+    public boolean hasCombatSynergy = false;
+
+    public boolean hasEnemyInRange(List<Enemy> enemies, double maxDistance, Class<? extends Enemy> enemyType) {
+        for (Enemy enemy : enemies) {
+            if (enemy == this) continue;
+
+            double dx = this.xCoordinate - enemy.xCoordinate;
+            double dy = this.yCoordinate - enemy.yCoordinate;
+            double distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance <= maxDistance && enemyType.isInstance(enemy)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public float calculateAverageSpeed(float speed1, float speed2) {
+        return (speed1 + speed2) / 2.0f;
+    }
+
+    public void updateCombatSynergy(List<Enemy> enemies, double tileWidth) {
+        if (this instanceof Knight) {
+            if (hasEnemyInRange(enemies, tileWidth, Goblin.class)) {
+                float averageSpeed = calculateAverageSpeed(1.0f, 1.2f); //Knight's speed (1.0) and Goblin's speed (1.2)
+                this.speed = averageSpeed;
+                this.hasCombatSynergy = true;
+            } else {
+                this.speed = 1.0f; //Reverting to original speed
+                this.hasCombatSynergy = false;
+            }
+        }
+    }
 	
 
 	public void setRow(int row) {
@@ -69,13 +110,6 @@ public abstract class Enemy {
 		this.health = health;
 	}
 
-	public float getSpeed() {
-		return speed;
-	}
-
-	public void setSpeed(float speed) {
-		this.speed = speed;
-	}
 
 	
 
