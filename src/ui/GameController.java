@@ -70,6 +70,7 @@
 	    private boolean isPaused=false;
 	    private boolean gameSpeed=false;
 	    private Map<Enemy, ProgressBar> enemyHP = new HashMap<>();
+	    private Map<Enemy, ImageView> enemyThunder = new HashMap<>();
 	    private int defaultHealth;
 	    private int defaultCoins;
 	    private int startrow;
@@ -367,6 +368,7 @@
 			for (Enemy e : engine.getActiveEnemies()) {
 				ImageView view = enemyViews.get(e);
 				ProgressBar HP = enemyHP.get(e);
+				ImageView thunder = enemyThunder.get(e);
 
 				if (view == null) {
 					startcol=e.getCol() ;
@@ -402,15 +404,17 @@
 					HP.setPrefWidth(TILE_WIDTH * 0.7);
 					HP.setStyle("-fx-accent: red;");
 					enemyHP.put(e, HP);
-					if (e instanceof Knight) {
-						ImageView thunderIcon = new ImageView(new Image(getClass().getResourceAsStream("/ui/Assets/thunder icon.png")));
-						thunderIcon.setFitWidth(20);
-						thunderIcon.setFitHeight(20);
-						thunderIcon.setTranslateX(e.getCol() * TILE_WIDTH + TILE_WIDTH * 0.7);
-						thunderIcon.setTranslateY(e.getRow() * TILE_HEIGHT - 30);
-						thunderIcon.setVisible(e.hasCombatSynergy);
-						mapGrid.getChildren().add(thunderIcon);
-					}
+				
+					ImageView thunderIcon = new ImageView(new Image(getClass().getResourceAsStream("/ui/Assets/thunder icon.png")));
+					thunderIcon.setFitWidth(20);
+					thunderIcon.setFitHeight(20);
+					thunderIcon.setTranslateX(e.getCol() * TILE_WIDTH + TILE_WIDTH * 0.7);
+					thunderIcon.setTranslateY(e.getRow() * TILE_HEIGHT - 30);
+					thunderIcon.setVisible(e.hasCombatSynergy);
+					mapGrid.getChildren().add(thunderIcon);
+					enemyThunder.put(e, thunderIcon);
+						
+					
 
 					mapGrid.getChildren().addAll(view, HP);
 					view.setTranslateX(e.getCol() * TILE_WIDTH);
@@ -428,8 +432,10 @@
 					animation.setCycleCount(Timeline.INDEFINITE);
 					animation.play();
 				} else {
+					thunder.setVisible(e.hasCombatSynergy);
 					TranslateTransition tt = new TranslateTransition(Duration.millis(250), view);
 					TranslateTransition hh = new TranslateTransition(Duration.millis(250), HP);
+					TranslateTransition th = new TranslateTransition(Duration.millis(250), thunder);
 					double targetx = e.getCol() * TILE_WIDTH;
 					double targety = e.getRow() * TILE_HEIGHT;
 					double movx = targetx - view.getTranslateX();
@@ -441,24 +447,15 @@
 					}
 					tt.setByX(movx);
 					hh.setByX(movx);
+					th.setByX(movx);
 					tt.setByY(movy);
 					hh.setByY(movy);
+					th.setByY(movy);
 					tt.play();
 					hh.play();
+					th.play();
 					HP.setProgress((double)e.getHealth() / e.maxHP);
-					if (e instanceof Knight) {
-						for (javafx.scene.Node node : mapGrid.getChildren()) {
-							if (node instanceof ImageView && node != view) {
-								ImageView thunderIcon = (ImageView) node;
-								if (thunderIcon.getFitWidth() == 20 && thunderIcon.getFitHeight() == 20) {
-									thunderIcon.setVisible(e.hasCombatSynergy);
-									thunderIcon.setTranslateX(targetx + TILE_WIDTH * 0.7);
-									thunderIcon.setTranslateY(targety - 30);
-									break;
-								}
-							}
-						}
-					}
+					
 				}
 				
 			}
