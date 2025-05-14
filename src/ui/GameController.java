@@ -470,6 +470,7 @@
 		}
 		private void fireFromTower(Tower tower, Enemy target) {
 			Projectile p = new Projectile(tower, target, tower.getDamage()); 
+			
 			Image[] fireFrames = new Image[] {
 					new Image(getClass().getResourceAsStream("/ui/Assets/fireball_1.png")),
 					new Image(getClass().getResourceAsStream("/ui/Assets/fireball_2.png")),
@@ -478,6 +479,18 @@
 					new Image(getClass().getResourceAsStream("/ui/Assets/fireball_5.png")),
 					new Image(getClass().getResourceAsStream("/ui/Assets/fireball_6.png"))
 			};
+			if (tower instanceof Archer_Tower) {
+				fireFrames= new Image[] {
+						new Image(getClass().getResourceAsStream("/ui/Assets/arrow.png"))
+						
+				};
+			}
+			if (tower instanceof Artillery_Tower) {
+				fireFrames= new Image[] {
+						new Image(getClass().getResourceAsStream("/ui/Assets/bomb.png"))
+						
+				};
+			}
 			ProjectileController controller = new ProjectileController(p, fireFrames);
 			controller.setStartcol(startcol);
 			controller.setStartrow(startrow);
