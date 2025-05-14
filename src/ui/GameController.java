@@ -463,6 +463,7 @@
 				if (!engine.getActiveEnemies().contains(e)) {
 					mapGrid.getChildren().remove(enemyViews.get(e));
 					mapGrid.getChildren().remove(enemyHP.get(e));
+					mapGrid.getChildren().remove(enemyThunder.get(e));
 					
 				}
 			}
