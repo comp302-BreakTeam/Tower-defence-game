@@ -1,11 +1,11 @@
 package domain;
 
-import java.util.ArrayList;
+
 
 public class Goblin extends Enemy{
 	
 	
-	public Goblin() {
+	public Goblin() {//creates the goblin with set values
 		super(100, 1.2f,10);
 	}
 	}

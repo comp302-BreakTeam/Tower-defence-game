@@ -8,23 +8,20 @@ import java.util.Map;
 public class GameEngine {
 	private Player player;
 	private Wave currentWave;
-	private List<int[]> path;
-	private List<Enemy> activeEnemies;
-	
-
-	private int tickCounter = 0;
-    private int spawnRate = 30;
+	private List<int[]> path; // list of path coordinates
+	private List<Enemy> activeEnemies;	
+	private int tickCounter = 0; 
+    private int spawnRate = 30;// every 30 tick enemy spawns
     private int waveSize = 10;
     private int waveNumber = 1;
     private int maxWaves = 5;
-    private int waveCooldown = 180; 
+    private int waveCooldown = 180;  // after wave there is 180 tick time till next
     private int cooldownCounter = 0;
     private boolean waitingForNextWave = false;
     private boolean gameOver = false;
-    private Map<Enemy, Float> moveCooldown = new HashMap<>();
-    
+    private Map<Enemy, Float> moveCooldown = new HashMap<>();  //maps each enemy to its move cooldown
     public GameEngine(List<int[]> path, int waveSize, int maxWaves,Player player) {
-        this.path = path;
+        this.path = path; 
         this.waveSize = waveSize;
         this.currentWave = new Wave(waveSize);
         this.activeEnemies = new ArrayList<>();
@@ -33,53 +30,53 @@ public class GameEngine {
     }
     
     public void update() {
-    	if (gameOver) { 
+    	if (gameOver) { // if game over it returns 
     		return;
     	}
-    	tickCounter++;
+    	tickCounter++; // increment the tick
     	
-    	if (waitingForNextWave) {
+    	if (waitingForNextWave) { // if waiting for wave it increments the cooldown
     		cooldownCounter++;
-            if (cooldownCounter >= waveCooldown) {
+            if (cooldownCounter >= waveCooldown) { // it starts the next wave if cooldown is finished
                 startNextWave();
             }
             return;
     	}
-    	if (!currentWave.isEmpty() && tickCounter % spawnRate == 0) {
+    	if (!currentWave.isEmpty() && tickCounter % spawnRate == 0) { // if the wave is not empty and it is in spawn rate tick it gets a new enemy form wave
             Enemy e = currentWave.nextEnemy();
-            e.setPosition(path.get(0)[0], path.get(0)[1]);
-            activeEnemies.add(e);
-            moveCooldown.put(e, 0f);
+            e.setPosition(path.get(0)[0], path.get(0)[1]); //sets enemy pos to start tile
+            activeEnemies.add(e); // add enemy to active enemy
+            moveCooldown.put(e, 0f); // maps its move cooldown
         }
-    	List<Enemy> toRemove = new ArrayList<>();
+    	List<Enemy> toRemove = new ArrayList<>(); //enemies that reached the end 
     	 for (Enemy e : activeEnemies) {
              e.updateCombatSynergy(activeEnemies, 75.0); // 75.0 is the tile width
     		 float cooldown = moveCooldown.get(e);
-    		 cooldown += e.getSpeed() / 20f;
-    		 if (cooldown < 1f) {
-    			    moveCooldown.put(e, cooldown);
-    			    continue;
+    		 cooldown += e.getSpeed() / 20f; //move cooldown is related to enemy speed
+    		 if (cooldown < 1f) { 
+    			    moveCooldown.put(e, cooldown); 
+    			    continue; // if cooldown is not reached increases the cooldown and the enemy does not move
     			}
-    		 moveCooldown.put(e, 0f);
+    		 moveCooldown.put(e, 0f); // sets the new move cooldown to zero 
     		 int index = getCurrentPathIndex(e);
-    		 if (index + 1 < path.size()) {
+    		 if (index + 1 < path.size()) {//checks if enemy reached end if not enemy goes to next path
     			 int[] next = path.get(index + 1);
     			 e.setPosition(next[0], next[1]);
     		 }else {
                  toRemove.add(e);
-                 player.reducePlayerLives();
+                 player.reducePlayerLives(); // decreases the player life if enemy reached the end
                  if(player.getLives()<=0) {
-                	 gameOver=true;
+                	 gameOver=true; // if player has no life game ends 
                 	 return;
                  }
              }
     		 
     	 }
 
-         activeEnemies.removeAll(toRemove);
+         activeEnemies.removeAll(toRemove); // removes the enemy that reached the end
 
         if (isWaveOver() && waveNumber < maxWaves) {
-            waitingForNextWave = true;
+            waitingForNextWave = true; //checks if max wave is reached
             cooldownCounter = 0;
         } else if (isWaveOver() && waveNumber >= maxWaves) {
             gameOver = true;

@@ -50,7 +50,7 @@ public class Player {
     	gold += amount;
     }
 
-    public boolean canAfford(int amount){
+    public boolean canAfford(int amount){ // checks if player can afford towers if so it buys them
     	if(amount<= gold) {
     		deductGold(amount);
     		return true;

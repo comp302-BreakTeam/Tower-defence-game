@@ -37,7 +37,7 @@ public class MapController {
 	private Button back;
     
     @FXML
-	private void handleSave() throws IOException {
+	private void handleSave() throws IOException {// saves the map but it first checks if the map is valid using validate 
     	if (!validateMap()) {
             System.out.println("Maps validation failed. Cannot save.");
             Alert alert= new Alert(AlertType.ERROR,"Maps validation failed. Cannot save.");
@@ -201,7 +201,7 @@ public class MapController {
     	
     }
 
-    private boolean validateMap() {
+    private boolean validateMap() {// checks the map if it has one path and no branches if it connected using recursion
     	boolean[][] visited = new boolean[ROWS][COLS];
     	int totalPathTiles = 0;
     	int startRow = -1;

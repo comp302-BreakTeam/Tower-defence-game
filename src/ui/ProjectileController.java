@@ -96,7 +96,7 @@ public class ProjectileController extends ImageView {
 
         if (dist < 10) {
             if (Math.random() > 0.1) {
-            	if (projectile.getSource() instanceof Mage_Tower && target instanceof Knight) {
+            	if (projectile.getSource() instanceof Mage_Tower && target instanceof Knight) {//increase damage if the enemy is fired by the more effective tower
             		target.takeDamage(projectile.getDamage()*1.5);
             	}
             	else if (projectile.getSource() instanceof Archer_Tower && target instanceof Goblin) {
@@ -105,7 +105,7 @@ public class ProjectileController extends ImageView {
             	else {
             		target.takeDamage(projectile.getDamage());
 				}
-            	if (projectile.getSource() instanceof Artillery_Tower) {
+            	if (projectile.getSource() instanceof Artillery_Tower) {// does damage to all enemies in a radius
             		applyAoeDamage();
 
             	}
@@ -116,7 +116,7 @@ public class ProjectileController extends ImageView {
             if (projectile.getSource() instanceof Mage_Tower) {
             	Random random = new Random();
             	int percent = random.nextInt(100);
-            	if (percent<3) {
+            	if (percent<3) {// has 3 percent chance to send enemy back
 					target.setCol(startcol);
 					target.setRow(startrow);
 				}

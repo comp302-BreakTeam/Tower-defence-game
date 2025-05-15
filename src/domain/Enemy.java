@@ -5,12 +5,13 @@ import java.util.List;
 public abstract class Enemy {
 	protected int health = 100;
 	protected float speed;
-	protected int reward;
-	protected int row;
+	protected int reward; // the amount of coins the enemy gives when it dies
+	protected int row; 
     protected int col;
     public final int maxHP=100;
     protected double xCoordinate;
     protected double yCoordinate;
+    public boolean hasCombatSynergy = false;
 
     public double getxCoordinate() {
         return xCoordinate;
@@ -24,7 +25,7 @@ public abstract class Enemy {
     public void setyCoordinate(double yPos) {
         this.yCoordinate = yPos;
     }
-    public void setPosition(int row, int col) {
+    public void setPosition(int row, int col) { //set the position of the enmy with the rows and collums of the map
         this.row = row;
         this.col = col;
         this.xCoordinate = col * 75; // tile width
@@ -46,10 +47,10 @@ public abstract class Enemy {
     public int getReward() {
     	return reward;
     }
-    public void takeDamage(double d) {
+    public void takeDamage(double d) { //decrease enemy health
         health -= d;
     }
-    public boolean isDead() {
+    public boolean isDead() { // checker for enemy is dead
         return health <= 0;
     }
 
@@ -61,17 +62,17 @@ public abstract class Enemy {
         this.speed = speed;
     }
 
-    public boolean hasCombatSynergy = false;
+     
 
     public boolean hasEnemyInRange(List<Enemy> enemies, double maxDistance, Class<? extends Enemy> enemyType) {
-        for (Enemy enemy : enemies) {
+        for (Enemy enemy : enemies) { //checks each enemy in the given active enemy class 
             if (enemy == this) continue;
 
             double dx = this.xCoordinate - enemy.xCoordinate;
             double dy = this.yCoordinate - enemy.yCoordinate;
             double distance = Math.sqrt(dx * dx + dy * dy);
 
-            if (distance <= maxDistance && enemyType.isInstance(enemy)) {
+            if (distance <= maxDistance && enemyType.isInstance(enemy)) { // if the distance is lower then the max distance and enemy type is accurate it returns true
                 return true;
             }
         }

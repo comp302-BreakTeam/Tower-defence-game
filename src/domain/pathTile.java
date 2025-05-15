@@ -3,7 +3,7 @@ package domain;
 import java.util.ArrayList;
 
 public class pathTile extends Tile{
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L; //for save 
 	private ArrayList<Tile> adjacentTiles = new ArrayList<Tile>();
 	private Enemy enemyOnTile = null;
 	final private Tower tower = null;

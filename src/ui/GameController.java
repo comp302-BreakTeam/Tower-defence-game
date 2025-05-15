@@ -111,7 +111,7 @@
 	
 	
 	
-		public void setTileBackground(Button tile, TileType type) {
+		public void setTileBackground(Button tile, TileType type) {//for setting background
 	        String imagePath = "assets/grass.png"; 
 	
 	        switch (type) {
@@ -160,7 +160,7 @@
 					Button tile = new Button();
 					final int r = row;
     				final int c = col;
-					tile.setOnMouseClicked(e -> {
+					tile.setOnMouseClicked(e -> {// gives each tile action so it can drop fire ball on every tile
 					    if (fireballMode) {
 					        
 					        dropFireballAt(r, c);
@@ -172,7 +172,7 @@
 	    			setTileBackground(tile, currentMap[row][col] );
 	    			if(currentMap[row][col]==TileType.EMPTY_PLOT) {
 	    				
-		    			tile.setOnAction(e -> {
+		    			tile.setOnAction(e -> { //action to put tower on empty plots
 		    			emptyPlotAction(r, c, tile); 
 		    			
 		    			});
@@ -181,12 +181,12 @@
 				}
 				
 			}
-			this.path=findPath();
+			this.path=findPath(); //sets the path using findpath
 			defaultCoins=player.getGold();
 			defaultHealth=player.getLives();
-			engine = new GameEngine(path, player.getWaveSize(), player.getMaxWave(),player);
+			engine = new GameEngine(path, player.getWaveSize(), player.getMaxWave(),player);// initializes a game engine 
 			updateHUD();
-	        startGameLoop();
+	        startGameLoop(); // starts the game loop
 		}
 
 
@@ -201,17 +201,17 @@
 		    fireball.setTranslateX(targetX);
 		    fireball.setTranslateY(-100); 
 		    mapGrid.getChildren().add(fireball);
-		    TranslateTransition fall = new TranslateTransition(Duration.seconds(0.6), fireball);
+		    TranslateTransition fall = new TranslateTransition(Duration.seconds(0.6), fireball); // animation so the fireball drops 
 		    fall.setToY(targetY);
-		    fall.setOnFinished(e -> {
+		    fall.setOnFinished(e -> { // things to do after drop
 		        mapGrid.getChildren().remove(fireball);
 		        playExplosion(targetX, targetY);
 		        
 		    });
 		    fall.play();
 		    fireballOnCooldown = true;
-		    this.fireball.setText("COOLDOWN");
-		    Timeline cooldownTimer = new Timeline(new KeyFrame(Duration.seconds(10*speedMultiplier), e -> {
+		    this.fireball.setText("COOLDOWN"); 
+		    Timeline cooldownTimer = new Timeline(new KeyFrame(Duration.seconds(10*speedMultiplier), e -> { // ten second cooldown for fireball
 		        
 		    	fireballOnCooldown = false;
 		    	this.fireball.setText("FIREBALL");
@@ -251,21 +251,21 @@
 		    }
 		    animation.setOnFinished(e -> mapGrid.getChildren().remove(explosion));
 		    animation.play();
-		    double aoeRadius = 100;
+		    double aoeRadius = 100;// pixel radius for damage enemies
 		    for (Enemy enemy : engine.getActiveEnemies()) {
 		        double dx = enemy.getxCoordinate() - x;
 		        double dy = enemy.getyCoordinate() - y;
 		        double dist = Math.sqrt(dx * dx + dy * dy);
 		        if (dist <= aoeRadius) {
-		            enemy.takeDamage(100); 
+		            enemy.takeDamage(100); //insta death for every enemy
 		        }
 		    }
 		}
 
 
-		// ... existing code ...
+		
 		private long lastUpdateTime = System.nanoTime();
-		// ... existing code ...
+		
 		private void startGameLoop() {
 			timer = new AnimationTimer() {
 
@@ -345,8 +345,10 @@
 								player.addGold(e.getReward());
 								ImageView view = enemyViews.remove(e); 
 								ProgressBar hp = enemyHP.remove(e);
+								ImageView thunder = enemyThunder.remove(e);
 								if (view != null) mapGrid.getChildren().remove(view);
 								if (hp != null) mapGrid.getChildren().remove(hp);
+								if (thunder != null) mapGrid.getChildren().remove(thunder);
 							}
 						}
 						engine.getActiveEnemies().removeAll(toRemoveEnemies);
@@ -364,7 +366,7 @@
 			timer.start();
 		}
 
-		private void renderEnemies() {
+		private void renderEnemies() { // renders enemy images and animation 
 			for (Enemy e : engine.getActiveEnemies()) {
 				ImageView view = enemyViews.get(e);
 				ProgressBar HP = enemyHP.get(e);
@@ -459,7 +461,7 @@
 				}
 				
 			}
-			for (Enemy e : enemyViews.keySet()) {
+			for (Enemy e : enemyViews.keySet()) { // removes enemy images after reach end of path 
 				if (!engine.getActiveEnemies().contains(e)) {
 					mapGrid.getChildren().remove(enemyViews.get(e));
 					mapGrid.getChildren().remove(enemyHP.get(e));
@@ -468,7 +470,7 @@
 				}
 			}
 		}
-		private void fireFromTower(Tower tower, Enemy target) {
+		private void fireFromTower(Tower tower, Enemy target) { // creates the projectile and image and calls its controller
 			Projectile p = new Projectile(tower, target, tower.getDamage()); 
 			
 			Image[] fireFrames = new Image[] {
@@ -500,13 +502,13 @@
 		}
 
 
-		private void updateHUD() {
+		private void updateHUD() { //uptades the hud
 	        numHealth.setText("" + player.getLives());
 	        numCoin.setText("" + player.getGold());
 	        numWave.setText(engine.getWaveNumber()+"/"+engine.getMaxWaves());
 	    }
 		@FXML
-		private void handleBack() {
+		private void handleBack() { // return to the map selector screen
 			isPaused=true;
 			player.setGold(defaultCoins);
 			player.setLives(defaultHealth);
@@ -515,14 +517,14 @@
 			stage.setTitle("Main Menu");
 	        stage.show();
 		}
-		private boolean isEdge(int row, int col) {
+		private boolean isEdge(int row, int col) { // checks if it is edge
 	        return row == 0 || row == ROWS - 1 || col == 0 || col == COLS - 1;
 	    }
-		private boolean isInside(int row, int col) {
+		private boolean isInside(int row, int col) {//checks if cords is inside the map
 	        return row >= 0 && row < ROWS && col >= 0 && col < COLS;
 	    }
 		
-		private List<int[]> findPath(){
+		private List<int[]> findPath(){// finds path by using recursin and deapth first search
 			boolean[][] visited = new boolean[ROWS][COLS];
 		    List<int[]> path = new ArrayList<>();
 			int startRow = -1;
@@ -566,7 +568,7 @@
 			}
 	
 		@FXML
-		private void toggleSpeed() {
+		private void toggleSpeed() {// toggle game speed
 			
 			gameSpeed=!gameSpeed;
 			if(gameSpeed) {
@@ -579,14 +581,14 @@
 			}
 		}
 		@FXML
-		private void fireballMode() {
+		private void fireballMode() { //to activate fireball
 			if (fireballOnCooldown) {
 				return;
 			}
 		    fireballMode = true;
 		    fireball.setText("ACTIVE");
 		}
-		private void towerTileAction(int r,int c,Button tile) {
+		private void towerTileAction(int r,int c,Button tile) {// for sell or upgrade tower
 			ContextMenu menu = new ContextMenu();
 			MenuItem upgrade = new MenuItem("Upgrade");
 			MenuItem sell = new MenuItem("Sell");
