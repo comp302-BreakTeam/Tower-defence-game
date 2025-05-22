@@ -5,7 +5,7 @@ package domain;
 public abstract class Tower {
     protected int level;
     protected int damage;
-    protected int range;
+    protected double range;
     protected float fireRate;
     protected int cost;
 	private int row;
@@ -16,6 +16,7 @@ public abstract class Tower {
     	this.damage = damage;
     	this.fireRate = fireRate;
     	this.cost = cost;
+    	this.range = 5;
     }
 
 	public int getRow() {
@@ -64,6 +65,15 @@ public abstract class Tower {
 
 	public void setCost(int cost) {
 		this.cost = cost;
+	}
+	
+
+	public double getRange() {
+		return range;
+	}
+
+	public void setRange(double range) {
+		this.range = range;
 	}
 
 	public void fireProjectile(Enemy enemy){
