@@ -762,8 +762,8 @@ import javafx.scene.control.Button;
 		            int frameWidth = 128;
 		            int frameHeight = 128;
 		            int totalFrames = 7;
-		            bagView.setFitWidth(40); // scale as needed
-		            bagView.setFitHeight(40);
+		            bagView.setFitWidth(55);
+		            bagView.setFitHeight(55);
 		            bagView.setTranslateX(bag.getX());
 		            bagView.setTranslateY(bag.getY());
 		            Timeline animation = new Timeline(new KeyFrame(Duration.millis(100), event -> {
