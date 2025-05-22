@@ -627,7 +627,12 @@ import javafx.scene.control.Button;
 			upgrade.setOnAction(e ->{
 				towerTile twrTile= (towerTile) map.getTile(r, c);
 				Tower tower= twrTile.getTower();
-				if(player.canAfford(tower.getCost())) {
+				if(tower.getLevel()==2) {
+					Alert alert = new Alert(AlertType.INFORMATION,"This tower is already upgraded!!!!!");
+					alert.showAndWait();
+				}
+				
+				else if(player.canAfford(tower.getCost())) {
 					tower.upgradeTower();
 					if(tower instanceof Mage_Tower) {
 						tile.setStyle("-fx-background-image: url('" + getClass().getResource("assets/mageTowerUp.png") + "');" +
@@ -643,7 +648,7 @@ import javafx.scene.control.Button;
 					}
 				}
 				else {
-					Alert alert = new Alert(AlertType.INFORMATION,"You can't afford that poor bitch");
+					Alert alert = new Alert(AlertType.INFORMATION,"You can't afford that!!!!!");
 					alert.showAndWait();
 				}
 				
@@ -681,7 +686,7 @@ import javafx.scene.control.Button;
 
 				}
 				else {
-					Alert alert = new Alert(AlertType.INFORMATION,"You can't afford that poor bitch");
+					Alert alert = new Alert(AlertType.INFORMATION,"You can't afford that!!!!!");
 					alert.showAndWait();
 				}
 				
@@ -701,7 +706,7 @@ import javafx.scene.control.Button;
 
 				}
 				else {
-					Alert alert = new Alert(AlertType.INFORMATION,"You can't afford that poor bitch");
+					Alert alert = new Alert(AlertType.INFORMATION,"You can't afford that!!!!!");
 					alert.showAndWait();
 				}
 				
@@ -721,7 +726,7 @@ import javafx.scene.control.Button;
 
 				}
 				else {
-					Alert alert = new Alert(AlertType.INFORMATION,"You can't afford that poor bitch");
+					Alert alert = new Alert(AlertType.INFORMATION,"You can't afford that!!!!!");
 					alert.showAndWait();
 				}
 				
