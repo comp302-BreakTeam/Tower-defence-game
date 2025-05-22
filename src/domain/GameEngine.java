@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.Iterator;
+import domain.GoldBag;
 
 public class GameEngine {
 	private Player player;
@@ -20,6 +23,9 @@ public class GameEngine {
     private boolean waitingForNextWave = false;
     private boolean gameOver = false;
     private Map<Enemy, Float> moveCooldown = new HashMap<>();  //maps each enemy to its move cooldown
+    private List<GoldBag> goldBags = new ArrayList<>();
+    private Random random = new Random();
+    
     public GameEngine(List<int[]> path, int waveSize, int maxWaves,Player player) {
         this.path = path; 
         this.waveSize = waveSize;
@@ -119,4 +125,21 @@ public class GameEngine {
         return gameOver;
     }
 
+    public List<GoldBag> getGoldBags() {
+        return goldBags;
+    }
+
+    public void maybeDropGoldBag(Enemy e, int archerTowerCost) {
+        double dropChance = 0.5;
+        if (random.nextDouble() < dropChance) {
+            int minGold = 2;
+            int maxGold = archerTowerCost / 2;
+            int amount = minGold + random.nextInt(Math.max(1, maxGold - minGold + 1));
+            goldBags.add(new GoldBag(e.getxCoordinate(), e.getyCoordinate(), amount));
+        }
+    }
+
+    public void removeGoldBag(GoldBag bag) {
+        goldBags.remove(bag);
+    }
 }

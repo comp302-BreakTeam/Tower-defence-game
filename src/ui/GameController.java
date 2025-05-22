@@ -6,6 +6,7 @@
 	import java.util.HashMap;
 	import java.util.List;
 	import java.util.Map;
+	import java.util.Iterator;
     import javafx.animation.AnimationTimer;
 	import javafx.animation.KeyFrame;
 	import javafx.animation.Timeline;
@@ -81,6 +82,7 @@ import javafx.scene.control.Button;
 	    private double speedMultiplier = 1.0;
 	    private boolean fireballMode = false;
 	    private boolean fireballOnCooldown = false;
+	    private Map<GoldBag, ImageView> goldBagViews = new HashMap<>();
 	    
 	    public void setPreviousScene(Scene scene) {
 	        this.previousScene = scene;
@@ -325,11 +327,13 @@ import javafx.scene.control.Button;
 						}
 
 						renderEnemies();
+						renderGoldBags();
 						updateHUD();
 
 						if(gameSpeed) {
 							engine.update();
 							renderEnemies();
+							renderGoldBags();
 							updateHUD();
 						}
 						List<ProjectileController> toRemove = new ArrayList<>();
@@ -354,6 +358,7 @@ import javafx.scene.control.Button;
 								if (hp != null) mapGrid.getChildren().remove(hp);
 								if (thunder != null) mapGrid.getChildren().remove(thunder);
 								if (slow != null) mapGrid.getChildren().remove(slow);
+								engine.maybeDropGoldBag(e, new Archer_Tower().getCost());
 							}
 						}
 						engine.getActiveEnemies().removeAll(toRemoveEnemies);
@@ -482,13 +487,13 @@ import javafx.scene.control.Button;
 				}
 				
 			}
-			for (Enemy e : enemyViews.keySet()) { // removes enemy images after reach end of path 
+			for (Enemy e : enemyViews.keySet()) {
 				if (!engine.getActiveEnemies().contains(e)) {
 					mapGrid.getChildren().remove(enemyViews.get(e));
 					mapGrid.getChildren().remove(enemyHP.get(e));
 					mapGrid.getChildren().remove(enemyThunder.get(e));
 					mapGrid.getChildren().remove(enemySlow.get(e));
-					
+					engine.maybeDropGoldBag(e, new Archer_Tower().getCost());
 				}
 			}
 		}
@@ -736,5 +741,48 @@ import javafx.scene.control.Button;
 			menu.getItems().addAll(archer, mage, artillery);
 			menu.show(tile, Side.RIGHT, 0, 0);
 
+		}
+		private void renderGoldBags() {
+		    Iterator<GoldBag> it = engine.getGoldBags().iterator();
+		    while (it.hasNext()) {
+		        GoldBag bag = it.next();
+		        if (System.currentTimeMillis() - bag.getSpawnTime() > 10000) {
+		            ImageView oldView = goldBagViews.get(bag);
+		            if (oldView != null) {
+		                mapGrid.getChildren().remove(oldView);
+		            }
+		            goldBagViews.remove(bag);
+		            it.remove();
+		        }
+		    }
+		    for (GoldBag bag : engine.getGoldBags()) {
+		        if (!goldBagViews.containsKey(bag)) {
+		            Image goldBagSheet = new Image(getClass().getResourceAsStream("/ui/Assets/G_Spawn.png"));
+		            ImageView bagView = new ImageView(goldBagSheet);
+		            int frameWidth = 128;
+		            int frameHeight = 128;
+		            int totalFrames = 7;
+		            bagView.setFitWidth(40); // scale as needed
+		            bagView.setFitHeight(40);
+		            bagView.setTranslateX(bag.getX());
+		            bagView.setTranslateY(bag.getY());
+		            Timeline animation = new Timeline(new KeyFrame(Duration.millis(100), event -> {
+		                int frame = (int)((System.currentTimeMillis() / 100) % totalFrames);
+		                bagView.setViewport(new javafx.geometry.Rectangle2D(frame * frameWidth, 0, frameWidth, frameHeight));
+		            }));
+		            animation.setCycleCount(Timeline.INDEFINITE);
+		            animation.play();
+		            bagView.setOnMouseClicked(e -> {
+		                player.addGold(bag.getAmount());
+		                updateHUD();
+		                mapGrid.getChildren().remove(bagView);
+		                goldBagViews.remove(bag);
+		                engine.removeGoldBag(bag);
+		                animation.stop();
+		            });
+		            goldBagViews.put(bag, bagView);
+		            mapGrid.getChildren().add(bagView);
+		        }
+		    }
 		}
 		}
