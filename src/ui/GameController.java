@@ -13,7 +13,9 @@
 	import javafx.fxml.FXML;
 	import javafx.geometry.Side;
 	import javafx.scene.Scene;
-	import javafx.scene.control.Button;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 	import javafx.scene.control.ContextMenu;
 	import javafx.scene.control.Label;
 	import javafx.scene.control.MenuItem;
@@ -71,6 +73,7 @@
 	    private boolean gameSpeed=false;
 	    private Map<Enemy, ProgressBar> enemyHP = new HashMap<>();
 	    private Map<Enemy, ImageView> enemyThunder = new HashMap<>();
+	    private Map<Enemy, ImageView> enemySlow = new HashMap<>();
 	    private int defaultHealth;
 	    private int defaultCoins;
 	    private int startrow;
@@ -301,7 +304,7 @@
 												double dx = tower.getCol() - enemy.getCol();
 												double dy = tower.getRow() - enemy.getRow();
 												double dist = Math.sqrt(dx * dx + dy * dy);
-												if (dist <= 5 && dist < minDist) {
+												if (dist <= tower.getRange() && dist < minDist) {
 													minDist = dist;
 													target = enemy;
 												}
@@ -346,9 +349,11 @@
 								ImageView view = enemyViews.remove(e); 
 								ProgressBar hp = enemyHP.remove(e);
 								ImageView thunder = enemyThunder.remove(e);
+								ImageView slow = enemySlow.remove(e);
 								if (view != null) mapGrid.getChildren().remove(view);
 								if (hp != null) mapGrid.getChildren().remove(hp);
 								if (thunder != null) mapGrid.getChildren().remove(thunder);
+								if (slow != null) mapGrid.getChildren().remove(slow);
 							}
 						}
 						engine.getActiveEnemies().removeAll(toRemoveEnemies);
@@ -371,6 +376,7 @@
 				ImageView view = enemyViews.get(e);
 				ProgressBar HP = enemyHP.get(e);
 				ImageView thunder = enemyThunder.get(e);
+				ImageView slow = enemySlow.get(e);
 
 				if (view == null) {
 					startcol=e.getCol() ;
@@ -415,6 +421,15 @@
 					thunderIcon.setVisible(e.hasCombatSynergy);
 					mapGrid.getChildren().add(thunderIcon);
 					enemyThunder.put(e, thunderIcon);
+					
+					ImageView slowIcon = new ImageView(new Image(getClass().getResourceAsStream("/ui/Assets/snow flake icon.png")));
+					slowIcon.setFitWidth(20);
+					slowIcon.setFitHeight(20);
+					slowIcon.setTranslateX(e.getCol() * TILE_WIDTH - TILE_WIDTH * 0.3);
+					slowIcon.setTranslateY(e.getRow() * TILE_HEIGHT - 30);
+					slowIcon.setVisible(e.isSlowed());
+					mapGrid.getChildren().add(slowIcon);
+					enemySlow.put(e, slowIcon);
 						
 					
 
@@ -434,7 +449,9 @@
 					animation.setCycleCount(Timeline.INDEFINITE);
 					animation.play();
 				} else {
+					slow.setVisible(e.isSlowed());
 					thunder.setVisible(e.hasCombatSynergy);
+					TranslateTransition ht = new TranslateTransition(Duration.millis(250), slow);
 					TranslateTransition tt = new TranslateTransition(Duration.millis(250), view);
 					TranslateTransition hh = new TranslateTransition(Duration.millis(250), HP);
 					TranslateTransition th = new TranslateTransition(Duration.millis(250), thunder);
@@ -447,15 +464,19 @@
 					} else if (movy < 0) {
 						movy -= 10;
 					}
+					
 					tt.setByX(movx);
 					hh.setByX(movx);
 					th.setByX(movx);
+					ht.setByX(movx);
 					tt.setByY(movy);
 					hh.setByY(movy);
 					th.setByY(movy);
+					ht.setByY(movy);
 					tt.play();
 					hh.play();
 					th.play();
+					ht.play();
 					HP.setProgress((double)e.getHealth() / e.maxHP);
 					
 				}
@@ -466,6 +487,7 @@
 					mapGrid.getChildren().remove(enemyViews.get(e));
 					mapGrid.getChildren().remove(enemyHP.get(e));
 					mapGrid.getChildren().remove(enemyThunder.get(e));
+					mapGrid.getChildren().remove(enemySlow.get(e));
 					
 				}
 			}
@@ -491,6 +513,16 @@
 				fireFrames= new Image[] {
 						new Image(getClass().getResourceAsStream("/ui/Assets/bomb.png"))
 						
+				};
+			}
+			if(tower instanceof Mage_Tower && tower.getLevel()==2) {
+				fireFrames = new Image[] {
+						new Image(getClass().getResourceAsStream("/ui/Assets/blue_fireball_1.png")),
+						new Image(getClass().getResourceAsStream("/ui/Assets/blue_fireball_2.png")),
+						new Image(getClass().getResourceAsStream("/ui/Assets/blue_fireball_3.png")),
+						new Image(getClass().getResourceAsStream("/ui/Assets/blue_fireball_4.png")),
+						new Image(getClass().getResourceAsStream("/ui/Assets/blue_fireball_5.png")),
+						new Image(getClass().getResourceAsStream("/ui/Assets/blue_fireball_6.png"))
 				};
 			}
 			ProjectileController controller = new ProjectileController(p, fireFrames);
@@ -597,6 +629,22 @@
 				Tower tower= twrTile.getTower();
 				if(player.canAfford(tower.getCost())) {
 					tower.upgradeTower();
+					if(tower instanceof Mage_Tower) {
+						tile.setStyle("-fx-background-image: url('" + getClass().getResource("assets/mageTowerUp.png") + "');" +
+	            "-fx-background-size: cover;");
+					}
+					else if(tower instanceof Archer_Tower) {
+						tile.setStyle("-fx-background-image: url('" + getClass().getResource("assets/archerTowerUp.png") + "');" +
+	            "-fx-background-size: cover;");
+					}
+					else if(tower instanceof Artillery_Tower) {
+						tile.setStyle("-fx-background-image: url('" + getClass().getResource("assets/artilleryTowerUp.png") + "');" +
+	            "-fx-background-size: cover;");
+					}
+				}
+				else {
+					Alert alert = new Alert(AlertType.INFORMATION,"You can't afford that poor bitch");
+					alert.showAndWait();
 				}
 				
 				
@@ -632,6 +680,11 @@
 					tower.setCol(c);
 
 				}
+				else {
+					Alert alert = new Alert(AlertType.INFORMATION,"You can't afford that poor bitch");
+					alert.showAndWait();
+				}
+				
 		       
 		    });
 			mage.setOnAction(ev -> {
@@ -647,6 +700,11 @@
 					tower.setCol(c);
 
 				}
+				else {
+					Alert alert = new Alert(AlertType.INFORMATION,"You can't afford that poor bitch");
+					alert.showAndWait();
+				}
+				
 				
 		    });
 			artillery.setOnAction(ev -> {
@@ -662,6 +720,11 @@
 					tower.setCol(c);
 
 				}
+				else {
+					Alert alert = new Alert(AlertType.INFORMATION,"You can't afford that poor bitch");
+					alert.showAndWait();
+				}
+				
 				
 		    });
 			

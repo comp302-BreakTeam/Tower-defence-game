@@ -2,6 +2,10 @@ package domain;
 
 import java.util.List;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
+
 public abstract class Enemy {
 	protected int health = 100;
 	protected float speed;
@@ -12,6 +16,7 @@ public abstract class Enemy {
     protected double xCoordinate;
     protected double yCoordinate;
     public boolean hasCombatSynergy = false;
+    boolean isSlowed=false;
 
     public double getxCoordinate() {
         return xCoordinate;
@@ -110,7 +115,21 @@ public abstract class Enemy {
 	public void setHealth(int health) {
 		this.health = health;
 	}
-
+	
+	public boolean isSlowed() {
+		return this.isSlowed;
+	}
+	
+	public void beSlowed() {
+		this.isSlowed = true;
+		this.speed*=0.8;
+		Timeline slowTimer = new Timeline(new KeyFrame(Duration.seconds(4), evt -> {
+			this.speed*=1.25;
+			this.isSlowed = false;
+		}));
+		slowTimer.play();
+	}
+	
 
 	
 

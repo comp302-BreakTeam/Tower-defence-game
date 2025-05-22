@@ -31,7 +31,7 @@ public class ProjectileController extends ImageView {
     private int startrow;
     private int startcol;
     private List<Enemy> activeEnemies;
-    private final double AOE_RADIUS = 100;
+    private double AOE_RADIUS = 100;
 
     public void setActiveEnemies(List<Enemy> activeEnemies) {
 		this.activeEnemies = activeEnemies;
@@ -96,6 +96,9 @@ public class ProjectileController extends ImageView {
 
         if (dist < 10) {
             if (Math.random() > 0.1) {
+            	if(projectile.getSource() instanceof Mage_Tower && projectile.getSource().getLevel()==2) {
+        			target.beSlowed();
+        		}
             	if (projectile.getSource() instanceof Mage_Tower && target instanceof Knight) {//increase damage if the enemy is fired by the more effective tower
             		target.takeDamage(projectile.getDamage()*1.5);
             	}
@@ -106,10 +109,13 @@ public class ProjectileController extends ImageView {
             		target.takeDamage(projectile.getDamage());
 				}
             	if (projectile.getSource() instanceof Artillery_Tower) {// does damage to all enemies in a radius
-            		applyAoeDamage();
-
+            		double aoeRadius=AOE_RADIUS;
+            		if(projectile.getSource().getLevel()==2) {
+            			aoeRadius*=1.2;
+            		}
+            		applyAoeDamage(aoeRadius);
             	}
-                
+            	
             }
             hasHit = true;
             showImpact();
@@ -154,13 +160,13 @@ public class ProjectileController extends ImageView {
     public boolean isRemovable() {
         return removable;
     }
-    private void applyAoeDamage() {
+    private void applyAoeDamage(double aoeRadius) {
     	for(Enemy e:activeEnemies) {
     		if(e==target) continue;
     		double dx = e.getxCoordinate() - target.getxCoordinate();
             double dy = e.getyCoordinate() - target.getyCoordinate();
             double distance = Math.sqrt(dx * dx + dy * dy);
-            if (distance <= AOE_RADIUS) {
+            if (distance <= aoeRadius) {
             	e.takeDamage(projectile.getDamage());
             }
     	}
