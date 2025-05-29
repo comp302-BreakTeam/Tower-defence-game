@@ -18,7 +18,7 @@ public class UpgradeTowerTest {
     }
     
     @Test
-    public void initialLevelTest() {
+    public void testInitialLevel() {
     	assertEquals(1, tower.getLevel());
     }
     
