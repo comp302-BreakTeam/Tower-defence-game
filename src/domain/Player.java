@@ -49,7 +49,20 @@ public class Player {
     public void addGold(int amount) {
     	gold += amount;
     }
-
+/**
+ * Checks whether the player can afford an amount of gold to make a purchase.
+ *
+ * Requires: 
+ *     amount >= 0
+ *
+ * Modifies: 
+ *     this.gold
+ *
+ * Effects: 
+ *     - If the player has at least 'amount' gold, subtracts 'amount' from the player's gold 
+ *       and returns true.
+ *     - If the player does not have enough gold, leaves the gold unchanged and returns false.
+ */
     public boolean canAfford(int amount){ // checks if player can afford towers if so it buys them
     	if(amount<= gold) {
     		deductGold(amount);

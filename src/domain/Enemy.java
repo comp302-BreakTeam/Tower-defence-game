@@ -88,6 +88,15 @@ public abstract class Enemy {
         return (speed1 + speed2) / 2.0f;
     }
 
+    /**
+     * Updates the combat synergy state of this enemy based on nearby enemies.
+     * 
+     * @requires enemies != null && tileWidth > 0
+     * @modifies this.speed, this.hasCombatSynergy
+     * @effects If this enemy is a Knight and there is a Goblin within tileWidth distance,
+     *          sets speed to average of Knight (1.0) and Goblin (1.2) speeds and sets hasCombatSynergy to true.
+     *          Otherwise, resets speed to 1.0 and sets hasCombatSynergy to false.
+     */
     public void updateCombatSynergy(List<Enemy> enemies, double tileWidth) {
         if (this instanceof Knight) {
             if (hasEnemyInRange(enemies, tileWidth, Goblin.class)) {
