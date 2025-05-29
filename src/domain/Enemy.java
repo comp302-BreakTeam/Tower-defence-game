@@ -68,6 +68,20 @@ public abstract class Enemy {
     }
 
      
+/*Specification
+  Checks whether there is at least one enemy of a specific type within a given distance
+
+  Requires:
+  - `enemies` list is not null
+  - `enemyType` is a subclass of Enemy
+  - The caller object is part of the game and has valid x/y coordinates
+  Modifies:
+  - None
+  Effects:
+  - Returns true if at least one other enemy of the specified type is within `maxDistance` from this enemy
+  - Returns false otherwise
+  - Ignores self when scanning the list
+ */
 
     public boolean hasEnemyInRange(List<Enemy> enemies, double maxDistance, Class<? extends Enemy> enemyType) {
         for (Enemy enemy : enemies) { //checks each enemy in the given active enemy class 
