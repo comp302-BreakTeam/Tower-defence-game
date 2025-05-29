@@ -5,10 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import domain.Goblin;
 import domain.Knight;
-import javafx.embed.swing.JFXPanel;
 
 public class EnemyTest {
 	/**
