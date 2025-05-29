@@ -496,7 +496,25 @@ import javafx.scene.control.Button;
 					engine.maybeDropGoldBag(e, new Archer_Tower().getCost());
 				}
 			}
-		}
+		}/* Specifications:
+		  Requires:
+		  -tower and target must not be null
+		  -tower must have a valid level and damage
+		  -getClass().getResourceAsStream(...) must return valid image streams
+		  -engine and mapGrid must be initialized
+		  -startrow and startcol must be within the map bounds
+		 
+		  Modifies:
+		  -activeProjectiles: Adds a new ProjectileController
+		  -mapGrid: Adds the controller node to the visual grid
+		 
+		  Effects:
+		  -Creates a new Projectile based on the tower and target
+		  -Selects an animation frame sequence based on the type and level of the tower
+		  -Initializes a ProjectileController with the projectile and frames
+		  -Sets its row, column, active enemies
+		  -Adds the controller to both the `activeProjectiles` list and `mapGrid` for rendering and game logic
+		 */
 		private void fireFromTower(Tower tower, Enemy target) { // creates the projectile and image and calls its controller
 			Projectile p = new Projectile(tower, target, tower.getDamage()); 
 			
