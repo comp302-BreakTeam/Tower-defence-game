@@ -119,7 +119,11 @@ public abstract class Enemy {
 	public boolean isSlowed() {
 		return this.isSlowed;
 	}
-	
+	/**
+	 * Requires: Enemy to exist
+	 * Modifies: speed, isSlowed
+	 * Effects: sets speed to 80 percent for 4 seconds
+	 */
 	public void beSlowed() {
 		this.isSlowed = true;
 		this.speed*=0.8;
