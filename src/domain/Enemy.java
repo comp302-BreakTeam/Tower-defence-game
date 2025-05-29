@@ -134,6 +134,12 @@ public abstract class Enemy {
 		slowTimer.play();
 	}
 	
+	public boolean repOk() {
+	    return health >= 0 && speed > 0 && reward >= 0 && row >= 0 && row < 16 && col >= 0 && col < 16;
+	}
+	public void setReward(int reward) {
+		this.reward = reward;
+	}
 
 	
 
