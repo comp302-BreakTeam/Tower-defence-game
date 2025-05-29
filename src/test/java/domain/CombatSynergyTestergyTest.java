@@ -9,7 +9,7 @@ import domain.Enemy;
 import domain.Knight;
 import domain.Goblin;
 
-public class EnemyTest {
+public class CombatSynergyTestergyTest {
     private Knight knight;
     private Goblin goblin;
     private List<Enemy> enemies;
