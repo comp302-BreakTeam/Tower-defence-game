@@ -21,13 +21,13 @@ public class HasEnemyInRangeTest {
 
     @BeforeEach
     public void setUp() {
-        self = new Goblin(100, 1.0f, 10);
+        self = new Goblin();
         self.setPosition(0, 0); 
-        closeGoblin = new Goblin(100, 1.0f, 10);
+        closeGoblin = new Goblin();
         closeGoblin.setPosition(0, 1); 
-        farGoblin = new Goblin(100, 1.0f, 10);
+        farGoblin = new Goblin();
         farGoblin.setPosition(0, 10);   
-        closeKnight = new Knight(100, 1.0f, 10);
+        closeKnight = new Knight();
         closeKnight.setPosition(1, 0); 
 
         enemies = new ArrayList<>();
@@ -51,9 +51,10 @@ public class HasEnemyInRangeTest {
 
     @Test
     public void testWrongTypeOnly_returnsFalse() {
-        enemies.remove(closeGoblin);
+        enemies.remove(closeGoblin); 
         enemies.remove(farGoblin);
-        assertFalse(self.hasEnemyInRange(enemies, 100, Goblin.class)); 
+        assertFalse(self.hasEnemyInRange(enemies, 100, Goblin.class));
+    } 
     @Test
     public void testKnightInRange_returnsTrue() {
         assertTrue(self.hasEnemyInRange(enemies, 100, Knight.class));
