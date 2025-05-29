@@ -82,6 +82,9 @@ public abstract class Tower {
     }
 
     public void upgradeTower(){
+    	// Requires: Tower is not upgraded before also means tower should be level 1.
+    	// Modifies: Attributes of the tower change according to their description.
+    	// Effects: Tower level should be one level more from the initial level.
     	setCost(2*this.cost);
     	setFireRate(1.2f*this.fireRate);
     	setDamage(2*this.damage);
