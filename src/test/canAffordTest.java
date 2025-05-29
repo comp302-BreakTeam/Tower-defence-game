@@ -3,7 +3,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import domain.Player;
 
-public class PlayerTest {
+public class canAffordTest {
 
     @Test
     public void testCanAffordSuccess() {
