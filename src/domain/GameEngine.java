@@ -129,13 +129,11 @@ public class GameEngine {
         return goldBags;
     }
 
-    public void maybeDropGoldBag(Enemy e, int archerTowerCost) {
-        if (e.getHealth() <= 0) {
-            double dropChance = 0.5;
-            if (random.nextDouble() < dropChance) {
-                int minGold = 2;
-                int maxGold = archerTowerCost / 2;
-                int amount = minGold + random.nextInt(Math.max(1, maxGold - minGold + 1));
+    public void maybeDropGoldBag(Enemy e, int baseAmount) {
+        int index = getCurrentPathIndex(e);
+        if (e.getHealth() <= 0 && index + 1 < path.size()) {
+            if (Math.random() < 0.5) { // 50% drop chance
+                int amount = (int) (baseAmount * (0.5 + Math.random())); // Random amount between 50-150% of base
                 goldBags.add(new GoldBag(e.getxCoordinate(), e.getyCoordinate(), amount));
             }
         }

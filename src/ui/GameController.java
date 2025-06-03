@@ -493,7 +493,6 @@ import javafx.scene.control.Button;
 					mapGrid.getChildren().remove(enemyHP.get(e));
 					mapGrid.getChildren().remove(enemyThunder.get(e));
 					mapGrid.getChildren().remove(enemySlow.get(e));
-					engine.maybeDropGoldBag(e, new Archer_Tower().getCost());
 				}
 			}
 		}/* Specifications:
