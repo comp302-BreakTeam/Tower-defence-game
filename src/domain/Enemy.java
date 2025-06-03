@@ -68,6 +68,20 @@ public abstract class Enemy {
     }
 
      
+/*Specification
+  Checks whether there is at least one enemy of a specific type within a given distance
+
+  Requires:
+  - `enemies` list is not null
+  - `enemyType` is a subclass of Enemy
+  - The caller object is part of the game and has valid x/y coordinates
+  Modifies:
+  - None
+  Effects:
+  - Returns true if at least one other enemy of the specified type is within `maxDistance` from this enemy
+  - Returns false otherwise
+  - Ignores self when scanning the list
+ */
 
     public boolean hasEnemyInRange(List<Enemy> enemies, double maxDistance, Class<? extends Enemy> enemyType) {
         for (Enemy enemy : enemies) { //checks each enemy in the given active enemy class 
@@ -88,6 +102,15 @@ public abstract class Enemy {
         return (speed1 + speed2) / 2.0f;
     }
 
+    /**
+     * Updates the combat synergy state of this enemy based on nearby enemies.
+     * 
+     * @requires enemies != null && tileWidth > 0
+     * @modifies this.speed, this.hasCombatSynergy
+     * @effects If this enemy is a Knight and there is a Goblin within tileWidth distance,
+     *          sets speed to average of Knight (1.0) and Goblin (1.2) speeds and sets hasCombatSynergy to true.
+     *          Otherwise, resets speed to 1.0 and sets hasCombatSynergy to false.
+     */
     public void updateCombatSynergy(List<Enemy> enemies, double tileWidth) {
         if (this instanceof Knight) {
             if (hasEnemyInRange(enemies, tileWidth, Goblin.class)) {
@@ -119,7 +142,11 @@ public abstract class Enemy {
 	public boolean isSlowed() {
 		return this.isSlowed;
 	}
-	
+	/**
+	 * Requires: Enemy to exist
+	 * Modifies: speed, isSlowed
+	 * Effects: sets speed to 80 percent for 4 seconds
+	 */
 	public void beSlowed() {
 		this.isSlowed = true;
 		this.speed*=0.8;
@@ -130,6 +157,12 @@ public abstract class Enemy {
 		slowTimer.play();
 	}
 	
+	public boolean repOk() {
+	    return health >= 0 && speed > 0 && reward >= 0 && row >= 0 && row < 16 && col >= 0 && col < 16;
+	}
+	public void setReward(int reward) {
+		this.reward = reward;
+	}
 
 	
 
