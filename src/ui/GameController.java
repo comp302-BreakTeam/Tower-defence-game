@@ -1,16 +1,10 @@
 	package ui;
 	
 	import domain.*;
-	
-	import java.util.ArrayList;
-	import java.util.HashMap;
-	import java.util.List;
-	import java.util.Map;
-	import java.util.Iterator;
-    import javafx.animation.AnimationTimer;
-	import javafx.animation.KeyFrame;
-	import javafx.animation.Timeline;
-	import javafx.animation.TranslateTransition;
+
+	import java.util.*;
+
+	import javafx.animation.*;
 	import javafx.fxml.FXML;
 	import javafx.geometry.Side;
 	import javafx.scene.Scene;
@@ -83,6 +77,8 @@ import javafx.scene.control.Button;
 	    private boolean fireballMode = false;
 	    private boolean fireballOnCooldown = false;
 	    private Map<GoldBag, ImageView> goldBagViews = new HashMap<>();
+		private Map<Wood, ImageView> woodViews = new HashMap<>();
+		private List<Wood> woods = new ArrayList<>();
 	    
 	    public void setPreviousScene(Scene scene) {
 	        this.previousScene = scene;
@@ -191,6 +187,8 @@ import javafx.scene.control.Button;
 			defaultHealth=player.getLives();
 			engine = new GameEngine(path, player.getWaveSize(), player.getMaxWave(),player);// initializes a game engine 
 			updateHUD();
+			spawnRandomWoods();
+			renderWoods();
 	        startGameLoop(); // starts the game loop
 		}
 
@@ -795,6 +793,9 @@ import javafx.scene.control.Button;
 		                updateHUD();
 		                mapGrid.getChildren().remove(bagView);
 		                goldBagViews.remove(bag);
+						int col = (int)(bag.getX() / TILE_WIDTH);
+						int row = (int)(bag.getY() / TILE_HEIGHT);
+						showMoneyAnimation(col, row, bag.getAmount());
 		                engine.removeGoldBag(bag);
 		                animation.stop();
 		            });
@@ -803,4 +804,72 @@ import javafx.scene.control.Button;
 		        }
 		    }
 		}
+		private void spawnRandomWoods() {
+			woods.clear();
+			Random rand = new Random();
+			int numWoods = rand.nextInt(10) + 2;
+
+			List<int[]> grassTiles = new ArrayList<>();
+			for (int row = 0; row < ROWS; row++) {
+				for (int col = 0; col < COLS; col++) {
+					if (currentMap[row][col] == TileType.GRASS) {
+						grassTiles.add(new int[]{row, col});
+					}
+				}
+			}
+			Collections.shuffle(grassTiles, rand);
+
+			for (int i = 0; i < Math.min(numWoods, grassTiles.size()); i++) {
+				int[] pos = grassTiles.get(i);
+				woods.add(new Wood(pos[0], pos[1], 5)); // 5 coins per wood
+			}
 		}
+
+		private void renderWoods() {
+			// Remove old wood views
+			for (ImageView view : woodViews.values()) {
+				mapGrid.getChildren().remove(view);
+			}
+			woodViews.clear();
+
+			for (Wood wood : woods) {
+				Image woodImage = new Image(getClass().getResourceAsStream("/ui/Assets/wood.png"));
+				ImageView woodView = new ImageView(woodImage);
+				woodView.setFitWidth(40);
+				woodView.setFitHeight(40);
+				woodView.setTranslateX(wood.getCol() * TILE_WIDTH + 15);
+				woodView.setTranslateY(wood.getRow() * TILE_HEIGHT + 5);
+
+				woodView.setOnMouseClicked(e -> {
+					player.addGold(wood.getAmount());
+					updateHUD();
+					showMoneyAnimation(wood.getCol(), wood.getRow(), wood.getAmount());
+					mapGrid.getChildren().remove(woodView);
+					woodViews.remove(wood);
+					woods.remove(wood);
+				});
+
+				woodViews.put(wood, woodView);
+				mapGrid.getChildren().add(woodView);
+			}
+		}
+		private void showMoneyAnimation(int col, int row, int amount) {
+			Label moneyLabel = new Label("+" + amount);
+			moneyLabel.setStyle("-fx-font-size: 24px; -fx-text-fill: gold; -fx-font-weight: bold; -fx-effect: dropshadow(gaussian, black, 2, 0, 1, 1);");
+			moneyLabel.setTranslateX(col * TILE_WIDTH + 25);
+			moneyLabel.setTranslateY(row * TILE_HEIGHT + 10);
+
+			mapGrid.getChildren().add(moneyLabel);
+
+			TranslateTransition moveUp = new TranslateTransition(Duration.millis(800), moneyLabel);
+			moveUp.setByY(-30);
+
+			FadeTransition fade = new FadeTransition(Duration.millis(800), moneyLabel);
+			fade.setFromValue(1.0);
+			fade.setToValue(0.0);
+
+			ParallelTransition animation = new ParallelTransition(moveUp, fade);
+			animation.setOnFinished(ev -> mapGrid.getChildren().remove(moneyLabel));
+			animation.play();
+		}
+	}
