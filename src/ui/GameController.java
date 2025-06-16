@@ -1,16 +1,10 @@
 	package ui;
 	
 	import domain.*;
-	
-	import java.util.ArrayList;
-	import java.util.HashMap;
-	import java.util.List;
-	import java.util.Map;
-	import java.util.Iterator;
-    import javafx.animation.AnimationTimer;
-	import javafx.animation.KeyFrame;
-	import javafx.animation.Timeline;
-	import javafx.animation.TranslateTransition;
+
+	import java.util.*;
+
+	import javafx.animation.*;
 	import javafx.fxml.FXML;
 	import javafx.geometry.Side;
 	import javafx.scene.Scene;
@@ -83,6 +77,10 @@ import javafx.scene.control.Button;
 	    private boolean fireballMode = false;
 	    private boolean fireballOnCooldown = false;
 	    private Map<GoldBag, ImageView> goldBagViews = new HashMap<>();
+		private Map<Wood, ImageView> woodViews = new HashMap<>();
+		private List<Wood> woods = new ArrayList<>();
+		private ScaleTransition fireballPulse;
+		private Label fireballCooldownLabel = new Label();
 	    
 	    public void setPreviousScene(Scene scene) {
 	        this.previousScene = scene;
@@ -191,40 +189,62 @@ import javafx.scene.control.Button;
 			defaultHealth=player.getLives();
 			engine = new GameEngine(path, player.getWaveSize(), player.getMaxWave(),player);// initializes a game engine 
 			updateHUD();
+			spawnRandomWoods();
+			renderWoods();
 	        startGameLoop(); // starts the game loop
+			fireballCooldownLabel.setStyle(
+					"-fx-font-size: 24px; -fx-text-fill: white; -fx-font-weight: bold; " +
+							"-fx-effect: dropshadow(gaussian, black, 4, 0.7, 0, 0);"
+			);
+			fireballCooldownLabel.setVisible(false);
+			fireballCooldownLabel.setMouseTransparent(true); // So it doesn't block clicks
+			startFireballPulse();
 		}
 
 
 		private void dropFireballAt(int row, int col) {
 			Image fireballImage = new Image(getClass().getResourceAsStream("/ui/Assets/fireball_1.png"));
-		    ImageView fireball = new ImageView(fireballImage);
-		    fireball.setFitWidth(100);
-		    fireball.setFitHeight(100);
+			ImageView fallingFireball = new ImageView(fireballImage); // Renamed variable
+			fallingFireball.setFitWidth(100);
+			fallingFireball.setFitHeight(100);
 
-		    double targetX = col * TILE_WIDTH;
-		    double targetY = row * TILE_HEIGHT;
-		    fireball.setTranslateX(targetX);
-		    fireball.setTranslateY(-100); 
-		    mapGrid.getChildren().add(fireball);
-		    TranslateTransition fall = new TranslateTransition(Duration.seconds(0.6), fireball); // animation so the fireball drops 
-		    fall.setToY(targetY);
-		    fall.setOnFinished(e -> { // things to do after drop
-		        mapGrid.getChildren().remove(fireball);
-		        playExplosion(targetX, targetY);
-		        
-		    });
-		    fall.play();
-		    fireballOnCooldown = true;
-		    this.fireball.setText("COOLDOWN"); 
-		    Timeline cooldownTimer = new Timeline(new KeyFrame(Duration.seconds(10*speedMultiplier), e -> { // ten second cooldown for fireball
-		        
-		    	fireballOnCooldown = false;
-		    	this.fireball.setText("FIREBALL");
-		    }));
-		    cooldownTimer.play();
-		    
-		    
-			
+			double targetX = col * TILE_WIDTH;
+			double targetY = row * TILE_HEIGHT;
+			fallingFireball.setTranslateX(targetX);
+			fallingFireball.setTranslateY(-100);
+			mapGrid.getChildren().add(fallingFireball);
+			TranslateTransition fall = new TranslateTransition(Duration.seconds(0.6), fallingFireball); // animation so the fireball drops
+			fall.setToY(targetY);
+			fall.setOnFinished(e -> { // things to do after drop
+				mapGrid.getChildren().remove(fallingFireball);
+				playExplosion(targetX, targetY);
+			});
+			fall.play();
+
+			fireballOnCooldown = true;
+			stopFireballPulse();
+			stopFireballPulse();
+
+			fireball.setVisible(true);
+			fireball.setText("10");
+
+			Timeline cooldownTimer = new Timeline();
+			final int[] secondsLeft = {10};
+			KeyFrame kf = new KeyFrame(Duration.seconds(1), ev -> {
+				secondsLeft[0]--;
+				if (secondsLeft[0] > 0) {
+					fireball.setText(String.valueOf(secondsLeft[0]));
+				} else {
+					fireballOnCooldown = false;
+					fireball.setText("FIREBALL ACTIVE");
+					startFireballPulse();
+					cooldownTimer.stop();
+				}
+			});
+			cooldownTimer.getKeyFrames().add(kf);
+			cooldownTimer.setCycleCount(10);
+			fireball.setText("COOLDOWN");
+			cooldownTimer.play();
 		}
 		private void playExplosion(double x, double y) {
 		    ImageView explosion = new ImageView();
@@ -493,6 +513,7 @@ import javafx.scene.control.Button;
 					mapGrid.getChildren().remove(enemyHP.get(e));
 					mapGrid.getChildren().remove(enemyThunder.get(e));
 					mapGrid.getChildren().remove(enemySlow.get(e));
+					engine.maybeDropGoldBag(e, new Archer_Tower().getCost());
 				}
 			}
 		}/* Specifications:
@@ -635,12 +656,15 @@ import javafx.scene.control.Button;
 			}
 		}
 		@FXML
-		private void fireballMode() { //to activate fireball
+		private void fireballMode() {
 			if (fireballOnCooldown) {
+				fireball.setText("COOLDOWN");
 				return;
 			}
-		    fireballMode = true;
-		    fireball.setText("ACTIVE");
+			fireballMode = true;
+			fireball.setText("FIREBALL ACTIVE");
+			fireball.setStyle("-fx-background-color: #ffcc00; -fx-text-fill: red; -fx-font-weight: bold; -fx-border-color: red; -fx-border-width: 3;");
+			stopFireballPulse();
 		}
 		private void towerTileAction(int r,int c,Button tile) {// for sell or upgrade tower
 			ContextMenu menu = new ContextMenu();
@@ -794,6 +818,9 @@ import javafx.scene.control.Button;
 		                updateHUD();
 		                mapGrid.getChildren().remove(bagView);
 		                goldBagViews.remove(bag);
+						int col = (int)(bag.getX() / TILE_WIDTH);
+						int row = (int)(bag.getY() / TILE_HEIGHT);
+						showMoneyAnimation(col, row, bag.getAmount());
 		                engine.removeGoldBag(bag);
 		                animation.stop();
 		            });
@@ -802,4 +829,92 @@ import javafx.scene.control.Button;
 		        }
 		    }
 		}
+		private void spawnRandomWoods() {
+			woods.clear();
+			Random rand = new Random();
+			int numWoods = rand.nextInt(5) + 5;
+
+			List<int[]> grassTiles = new ArrayList<>();
+			for (int row = 0; row < ROWS; row++) {
+				for (int col = 0; col < COLS; col++) {
+					if (currentMap[row][col] == TileType.GRASS) {
+						grassTiles.add(new int[]{row, col});
+					}
+				}
+			}
+			Collections.shuffle(grassTiles, rand);
+
+			for (int i = 0; i < Math.min(numWoods, grassTiles.size()); i++) {
+				int[] pos = grassTiles.get(i);
+				woods.add(new Wood(pos[0], pos[1], 5)); // 5 coins per wood
+			}
 		}
+
+		private void renderWoods() {
+			// Remove old wood views
+			for (ImageView view : woodViews.values()) {
+				mapGrid.getChildren().remove(view);
+			}
+			woodViews.clear();
+
+			for (Wood wood : woods) {
+				Image woodImage = new Image(getClass().getResourceAsStream("/ui/Assets/wood.png"));
+				ImageView woodView = new ImageView(woodImage);
+				woodView.setFitWidth(40);
+				woodView.setFitHeight(40);
+				woodView.setTranslateX(wood.getCol() * TILE_WIDTH + 15);
+				woodView.setTranslateY(wood.getRow() * TILE_HEIGHT + 5);
+
+				woodView.setOnMouseClicked(e -> {
+					player.addGold(wood.getAmount());
+					updateHUD();
+					showMoneyAnimation(wood.getCol(), wood.getRow(), wood.getAmount());
+					mapGrid.getChildren().remove(woodView);
+					woodViews.remove(wood);
+					woods.remove(wood);
+				});
+
+				woodViews.put(wood, woodView);
+				mapGrid.getChildren().add(woodView);
+			}
+		}
+		private void showMoneyAnimation(int col, int row, int amount) {
+			Label moneyLabel = new Label("+" + amount);
+			moneyLabel.setStyle("-fx-font-size: 30px; -fx-text-fill: gold; -fx-font-weight: bold; -fx-effect: dropshadow(gaussian, black, 2, 0, 1, 1);");
+			moneyLabel.setTranslateX(col * TILE_WIDTH + 25);
+			moneyLabel.setTranslateY(row * TILE_HEIGHT + 10);
+
+			mapGrid.getChildren().add(moneyLabel);
+
+			TranslateTransition moveUp = new TranslateTransition(Duration.millis(1500), moneyLabel);
+			moveUp.setByY(-30);
+
+			FadeTransition fade = new FadeTransition(Duration.millis(1500), moneyLabel);
+			fade.setFromValue(1.0);
+			fade.setToValue(0.0);
+
+			ParallelTransition animation = new ParallelTransition(moveUp, fade);
+			animation.setOnFinished(ev -> mapGrid.getChildren().remove(moneyLabel));
+			animation.play();
+		}
+		private void startFireballPulse() {
+			if (fireballPulse != null) fireballPulse.stop();
+			fireballPulse = new ScaleTransition(Duration.millis(800), fireball);
+			fireballPulse.setFromX(1.0);
+			fireballPulse.setFromY(1.0);
+			fireballPulse.setToX(1.15);
+			fireballPulse.setToY(1.15);
+			fireballPulse.setAutoReverse(true);
+			fireballPulse.setCycleCount(Animation.INDEFINITE);
+			fireballPulse.play();
+		}
+
+		private void stopFireballPulse() {
+			if (fireballPulse != null) {
+				fireballPulse.stop();
+				fireball.setScaleX(1.0);
+				fireball.setScaleY(1.0);
+			}
+		}
+
+	}
